@@ -1085,9 +1085,18 @@ function bindEvents(){
   window.addEventListener("message", function(e){
   var d = e.data || {};
   if(d.t !== "chem-scroll") return;
-  var els = [].slice.call(document.querySelectorAll("#exp-body .b-h,#exp-body .b-p,#exp-body .b-kv,#exp-body .b-img,#exp-body .b-fig,#exp-body .b-table-wrap"));
+  var reader = document.getElementById("reader");
+  if(!reader) return;
+  var wrap = reader.querySelector(".blocks") || reader;
+  var sel = ".b-h,.b-p,.b-kv,.b-fig,.b-img,.b-table-wrap";
+  var els = [].slice.call(wrap.querySelectorAll(sel)).filter(function(el){
+    return el.parentNode === wrap || el.parentNode === wrap.parentNode;
+  });
   var el = els[d.bi];
-  if(el && el.scrollIntoView) el.scrollIntoView({block:"center"});
+  if(!el) return;
+  var top = 0, n = el;
+  while(n && n !== reader){ top += n.offsetTop; n = n.offsetParent; }
+  reader.scrollTop = Math.max(0, top - 12);
 });
 window.addEventListener("hashchange", route);
 
