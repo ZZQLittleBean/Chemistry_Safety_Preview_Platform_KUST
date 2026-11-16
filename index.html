@@ -308,7 +308,7 @@ function escText(t){
     .replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 /* 受控富文本白名单：sub/sup/b/br/em 与 span.md-red，其余一律按文本转义 */
-var ALLOWED_TAGS = {sub:1,sup:1,b:1,br:1,em:1};
+var ALLOWED_TAGS = {sub:1,sup:1,b:1,br:1,em:1,i:1,u:1,s:1};
 function sanitizeHtml(s){
   s = (s==null?"":String(s));
   var out = "", last = 0, m;
@@ -334,7 +334,10 @@ function mdInline(s){
   t = t.replace(/_\{([^{}]*)\}/g, '<sub>$1</sub>');
   t = t.replace(/\^\{([^{}]*)\}/g, '<sup>$1</sup>');
   t = t.replace(/==([^=\n]+)==/g, '<span class="md-red">$1</span>');
+  t = t.replace(/~~([^~\n]+)~~/g, '<s>$1</s>');
+  t = t.replace(/__([^_\n]+)__/g, '<u>$1</u>');
   t = t.replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>');
+  t = t.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
   t = t.replace(/\n/g, "<br>");
   return t;
 }
