@@ -331,6 +331,8 @@ function sanitizeHtml(s){
 }
 function mdInline(s){
   var t = escText(s).replace(/\r\n/g,"\n");
+  t = t.replace(/_\{([^{}]*)\}/g, '<sub>$1</sub>');
+  t = t.replace(/\^\{([^{}]*)\}/g, '<sup>$1</sup>');
   t = t.replace(/==([^=\n]+)==/g, '<span class="md-red">$1</span>');
   t = t.replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>');
   t = t.replace(/\n/g, "<br>");
@@ -1080,7 +1082,14 @@ function refreshProgress(){
 
 /* ---------------- 事件绑定 ---------------- */
 function bindEvents(){
-  window.addEventListener("hashchange", route);
+  window.addEventListener("message", function(e){
+  var d = e.data || {};
+  if(d.t !== "chem-scroll") return;
+  var els = [].slice.call(document.querySelectorAll("#exp-body .b-h,#exp-body .b-p,#exp-body .b-kv,#exp-body .b-img,#exp-body .b-fig,#exp-body .b-table-wrap"));
+  var el = els[d.bi];
+  if(el && el.scrollIntoView) el.scrollIntoView({block:"center"});
+});
+window.addEventListener("hashchange", route);
 
   $("tab-learn").onclick = function(){ resetHomeTabs(); };
   $("tab-about").onclick = function(){
