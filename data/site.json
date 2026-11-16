@@ -1,0 +1,49 @@
+{
+ "site": {
+  "name": "大学化学实验学习平台",
+  "org": "昆明理工大学理学院",
+  "version": "1.1.0",
+  "updated": "2026-11-16",
+  "copyright": "教材与课程材料（含封面、原文、插图）版权归昆明理工大学理学院所有，仅用于本校课程教学；未经书面许可，不得用于商业用途或对外转载。",
+  "credits": "内容整理：昆明理工大学理学院化学实验课程组。图片：教材插图、课程实拍与自制示意图；标注“示意图（AI 生成）”的图片由本机 AI 生成，仅作实验示意。",
+  "disclaimer": "本站为课前预习辅助材料，不替代课堂讲授与实验操作。化学实验有风险，具体操作请以指导教师现场要求与实验室安全规程为准。",
+  "contact": "如涉侵权或发现内容错误，请在 GitHub 仓库（ZZQLittleBean/Chemistry_Safety_Preview_Platform_KUST）提交 Issue，我们将在核实后处理。"
+ },
+ "announcement": {
+  "image": "assets/announcement.jpg",
+  "title": "课前预习：先读安全教育，再看实验详情"
+ },
+ "currentTextbook": "inorganic",
+ "textbooks": [
+  {
+   "id": "inorganic",
+   "name": "无机化学实验",
+   "cover": "assets/book-cover.jpg",
+   "order": 0,
+   "total": 6
+  },
+  {
+   "id": "analytical",
+   "name": "分析化学实验",
+   "cover": "assets/analytical-cover.jpg",
+   "order": 1,
+   "total": 4
+  }
+ ],
+ "updates": [
+  {
+   "version": "1.1.0",
+   "date": "2026-11-16",
+   "notes": [
+    "移除含学生人脸的课堂照片，替换为仪器示意图；补齐或缺图处改为表格/示意图"
+   ]
+  },
+  {
+   "version": "1.0.0",
+   "date": "2026-11-15",
+   "notes": [
+    "上线无机化学实验 6 个实验的预习材料"
+   ]
+  }
+ ]
+}

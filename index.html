@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F7F7F7">
+<meta name="description" content="昆明理工大学理学院大学化学实验课前预习平台：无机化学与分析化学实验的安全教育、实验目的、实验流程与实验思考，支持手机扫码直达。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="大学化学实验学习平台">
+<meta property="og:description" content="大学化学实验课前预习材料：先读安全教育，再看实验详情。">
+<meta property="og:image" content="assets/announcement.jpg">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<title>大学化学实验学习平台</title>
+<style>
+:root{
+  --bg:#F7F7F7; --card:#FFFFFF; --ink:#111114; --ink2:#5B5B60; --ink3:#9A9AA0;
+  --line:#E8E8EC; --accent:#F0662F; --green:#34C759; --blue:#007AFF; --new:#F7F05A;
+  --serif:"Songti SC","Source Han Serif SC","Noto Serif SC","SimSun",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hidden{display:none!important}
+.page{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg)}
+.page.active{display:flex}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.gate-wrap{flex:1;overflow-y:auto}
+
+.nav{flex:none;height:52px;display:flex;align-items:center;justify-content:center;position:relative;
+  padding-top:env(safe-area-inset-top);background:var(--bg);z-index:5}
+.nav h1{margin:0;font-size:17px;font-weight:600;letter-spacing:.2px}
+.nav .back{position:absolute;left:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;
+  border:none;background:none;font-size:26px;line-height:1;color:var(--ink);cursor:pointer;padding:0 0 3px}
+.nav .avatar{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:32px;height:32px;
+  border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;
+  font-size:13px;color:var(--ink3);cursor:pointer;overflow:hidden}
+
+.tabs{flex:none;display:flex;gap:34px;padding:6px 22px 0;background:var(--bg)}
+.tabs button{border:none;background:none;font-size:19px;font-weight:600;color:var(--ink);
+  padding:6px 2px 10px;cursor:pointer;position:relative;font-family:var(--serif)}
+.tabs button.on{color:var(--accent)}
+.tabs button.on:after{content:"";position:absolute;left:50%;bottom:4px;transform:translateX(-50%);
+  width:22px;height:4px;border-radius:2px;background:var(--accent)}
+.tabs-line{flex:none;height:8px;background:#EFEFF2;border-top:1px solid #E9E9EC;border-bottom:1px solid #E9E9EC}
+
+.body{padding:0 18px 40px;max-width:640px;margin:0 auto;width:100%}
+.announce{margin:16px 0 6px;border-radius:18px;overflow:hidden;background:#D7D7DA;position:relative;
+  aspect-ratio:16/9;display:block;width:100%;border:none;padding:0}
+.announce img{width:100%;height:100%;object-fit:cover;display:block}
+.announce .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 12px;color:#fff;font-size:13px;
+  background:linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,0));text-align:left}
+.announce .ph{position:absolute;inset:0;display:grid;place-items:center;color:#8B8B90;font-size:14px;text-align:center;padding:0 24px}
+.announce .img-fail{position:absolute;inset:0;display:grid;place-items:center;background:#E3E3E6;color:#8B8B90;margin:0;border-radius:0}
+.sec-title{font-family:var(--serif);font-size:30px;font-weight:700;letter-spacing:1px;margin:26px 0 14px}
+.sec-title.small{font-size:24px}
+.sec-title.tiny{font-size:18px;margin:20px 0 8px}
+.book{display:flex;gap:16px;align-items:center;background:var(--card);border-radius:16px;padding:16px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);cursor:pointer;border:1px solid #F0F0F2;text-align:left;width:100%;margin-bottom:12px}
+.book img.cover{width:74px;height:104px;object-fit:cover;border-radius:6px;box-shadow:0 4px 12px rgba(20,26,60,.18);flex:none;background:#E8E9F2}
+.book .meta{min-width:0}
+.book .name{font-size:22px;font-weight:600;margin-bottom:8px;letter-spacing:.5px}
+.book .sub{font-size:16px;color:var(--ink3)}
+.book.placeholder{justify-content:center;color:var(--ink3);font-size:15px;min-height:72px;border-style:dashed;
+  border-color:#E0E0E4;background:#FBFBFC;box-shadow:none}
+
+.about-block{background:var(--card);padding:18px 0}
+.about-block .line1{font-family:var(--serif);font-size:21px;line-height:1.55}
+.about-block .line2{font-size:13px;color:var(--ink3);margin-top:6px}
+.about-sec{background:var(--card);padding:4px 0 14px}
+.about-note{font-size:14px;line-height:1.8;color:var(--ink2);white-space:pre-wrap}
+.about-foot{font-size:12px;color:var(--ink3);padding:18px 2px 8px;text-align:center;line-height:1.7}
+.updates{background:var(--card);border-top:1px solid var(--line)}
+.upd{padding:14px 0;border-bottom:1px solid var(--line)}
+.upd .top{display:flex;justify-content:space-between;font-size:15px;color:var(--ink3);margin-bottom:4px}
+.upd .note{font-size:15px;color:var(--ink2);margin-top:2px}
+
+.prog{display:flex;gap:18px;align-items:center;padding:20px 0 18px}
+.ring{width:96px;height:96px;flex:none;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-size:17px;color:var(--ink2)}
+.prog .lines{font-size:19px;color:var(--ink3);line-height:1.75}
+.prog .lines b{font-weight:400;color:var(--ink);margin-left:8px}
+.list{background:var(--card);border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:12px;padding:20px 2px;border-bottom:1px solid var(--line);
+  background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;cursor:pointer}
+.row .no{font-size:17px;color:var(--ink3);width:66px;flex:none}
+.row .nm{font-size:18px;line-height:1.4;flex:1;min-width:0}
+.row .act{font-size:18px;color:var(--blue);flex:none}
+.row .tick{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);color:var(--green);
+  display:grid;place-items:center;font-size:15px;flex:none}
+.row.fresh{background:#FFFCA8;transition:background .3s}
+.row.fresh:active{background:#FFF36B}
+.list-note{font-size:12.5px;color:var(--ink3);padding:16px 2px 6px;line-height:1.7;background:var(--card)}
+.list-note b{font-weight:500;color:var(--accent)}
+
+.exp-head{padding:16px 0 10px}
+.exp-head .t{font-size:20px;line-height:1.5}
+.taskbar{display:flex;align-items:center;gap:12px;background:#EFEFF2;border-radius:10px;padding:12px 14px;font-size:15px;color:var(--ink3)}
+.taskbar .track{flex:1;height:6px;border-radius:3px;background:#DBDBDF;overflow:hidden}
+.taskbar .track i{display:block;height:100%;background:var(--accent);border-radius:3px;transition:width .3s}
+.modules{margin-top:18px;background:var(--card);border-top:1px solid var(--line)}
+.mrow{display:flex;align-items:center;gap:12px;padding:20px 2px;border-bottom:1px solid var(--line);cursor:pointer;
+  background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left}
+.mrow .m{font-size:17px;color:var(--ink3);width:66px;flex:none}
+.mrow .nm{font-size:19px;flex:1}
+.mrow .cnt{font-size:17px;color:var(--ink3);margin-right:6px}
+.mrow .go{font-size:18px;color:var(--blue)}
+.ai-row{background:linear-gradient(90deg,#FBE3D6,#F8D9C8);border-bottom:1px solid #F2C9B4}
+.ai-row .nm{display:flex;align-items:center;gap:10px}
+.ai-row .badge{font-size:12px;background:rgba(255,255,255,.65);color:#B4522B;border-radius:6px;padding:2px 7px}
+.bottombar{flex:none;display:flex;align-items:center;gap:16px;padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+  background:#fff;border-top:1px solid var(--line)}
+.bottombar .cur{font-size:15px;color:var(--ink3)}
+.bottombar .cur b{font-weight:500;color:var(--ink);font-size:17px;display:block;margin-top:2px}
+.bottombar .btn{margin-left:auto}
+.btn{border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:17px;font-weight:500;
+  padding:14px 28px;cursor:pointer;transition:transform .12s}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid #D6D6DB}
+.btn:disabled{opacity:.4}
+.reader{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px}
+.rhead{padding:14px 0 6px;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.rhead .pg{font-size:15px;color:var(--ink2);letter-spacing:.5px}
+.rhead .tag{font-size:15px;color:var(--accent);letter-spacing:.5px}
+.rtitle{font-family:var(--serif);font-size:27px;font-weight:700;line-height:1.35;margin:6px 0 10px}
+.rhint{font-size:15px;color:var(--ink3);margin-bottom:18px}
+.blocks{padding-bottom:24px;max-width:640px;margin:0 auto}
+.b-h{font-size:17px;font-weight:600;margin:22px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+.b-p{font-size:15.5px;line-height:1.85;color:#26262A;margin:0 0 12px;text-align:justify;white-space:pre-wrap;overflow-wrap:anywhere}
+.b-kv{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.b-kv .k{flex:none;background:#E3F1FB;color:#2E6C93;font-size:13px;padding:5px 12px;border-radius:8px;
+  min-width:76px;text-align:center;line-height:1.4}
+.b-kv .v{font-size:15.5px;line-height:1.8;color:#26262A;flex:1;overflow-wrap:anywhere}
+.b-img{width:100%;height:auto;border-radius:10px;margin:6px 0 14px;display:block;background:#fff}
+.b-poster{width:100%;height:auto;border-radius:12px;margin:2px 0 18px;display:block;border:1px solid #ECECEF}
+.md-red{color:#D93025}
+.b-fig{margin:6px 0 16px}
+.b-fig figcaption{font-size:12.5px;color:#6B6B72;text-align:center;margin-top:6px;line-height:1.6}
+.b-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px 0 16px}
+.b-table{border-collapse:collapse;min-width:100%;font-size:13.5px}
+.b-table th,.b-table td{border:1px solid #E4E4E8;padding:8px 10px;text-align:left;vertical-align:top;white-space:normal}
+.b-table th{background:#F6F7F9;font-weight:600}
+.img-fail{display:block;padding:14px 12px;margin:6px 0 14px;border-radius:10px;background:#EFEFF2;
+  color:#8B8B90;font-size:13px;text-align:center;line-height:1.6}
+.ai-tag{display:inline-block;margin-left:8px;font-size:11px;color:#7C5A00;background:#FFF3C4;border-radius:6px;padding:2px 7px;vertical-align:middle;letter-spacing:0}
+.pager{flex:none;display:flex;gap:14px;padding:10px 18px calc(12px + env(safe-area-inset-bottom));
+  background:#fff;border-top:1px solid var(--line)}
+.pager .btn{flex:1;padding:15px 0;font-size:18px}
+.ai-wrap{padding:4px 18px 20px;max-width:640px;margin:0 auto;width:100%}
+.ai-q{background:#fff;border-radius:14px;padding:14px 16px;margin-top:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.ai-q .q{font-size:15px;font-weight:600;margin-bottom:6px}
+.ai-q .a{font-size:14.5px;color:#3A3A40;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai-note{text-align:center;font-size:12px;color:var(--ink3);margin-top:20px;line-height:1.7}
+.ai-idle{margin-top:16px;background:#EFEFF2;border-radius:12px;padding:14px;color:var(--ink3);font-size:14px;line-height:1.7}
+.gate{padding:60px 24px;text-align:center;color:var(--ink3);font-size:15px;line-height:1.9}
+.gate b{display:block;font-size:19px;color:var(--ink);margin-bottom:8px;font-weight:600}
+.gate small{display:block;margin-top:14px;font-size:13px;color:var(--ink3)}
+
+.mask{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:60;display:flex;align-items:center;justify-content:center;
+  padding:20px;overflow-y:auto}
+.mask.hidden{display:none!important}
+.sheet{width:100%;max-width:360px;background:#fff;border-radius:18px;padding:20px;margin:auto}
+.sheet h3{margin:0 0 6px;font-size:17px}
+.sheet p{margin:0 0 12px;font-size:12.5px;color:var(--ink3);line-height:1.6}
+.sheet input{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;font-size:15px;outline:none}
+.sheet .acts{display:flex;gap:10px;margin-top:16px}
+.sheet .acts .btn{flex:1;padding:12px 0;font-size:15px}
+.done{width:100%;max-width:360px;background:#fff;border-radius:20px;padding:24px 18px;text-align:center;margin:auto}
+.done .big{font-size:22px;font-weight:700;margin:6px 0 4px}
+.done .sub{font-size:13px;color:var(--ink3);margin-bottom:16px;line-height:1.6}
+.done canvas{display:none;max-width:100%;max-height:46vh;width:auto;height:auto;margin:0 auto 10px;border-radius:12px;border:1px solid var(--line)}
+.done .hint{font-size:12px;color:var(--ink3);line-height:1.6;margin:0 0 12px}
+.done .acts{display:flex;gap:10px}
+.done .acts .btn{flex:1;padding:12px 0;font-size:15px}
+.toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  z-index:120;max-width:86vw;background:rgba(17,17,20,.9);color:#fff;font-size:14px;line-height:1.5;
+  padding:10px 16px;border-radius:10px;text-align:center;pointer-events:none}
+.global-err{position:fixed;left:0;right:0;top:0;z-index:300;background:#D93025;color:#fff;
+  font-size:13px;line-height:1.5;padding:8px 14px;text-align:center}
+.fatal{position:fixed;inset:0;z-index:400;background:var(--bg);display:grid;place-items:center;
+  text-align:center;padding:32px;color:var(--ink2);font-size:15px;line-height:1.9}
+.fatal b{display:block;font-size:19px;color:var(--ink);margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<section class="page active" id="p-home">
+  <div class="nav"><button class="avatar" id="avatar" type="button" aria-label="设置姓名">我</button><h1>首页</h1></div>
+  <div class="tabs"><button id="tab-learn" class="on" type="button">学习</button><button id="tab-about" type="button">关于</button></div>
+  <div class="tabs-line"></div>
+  <div class="scroll">
+    <div class="body" id="home-learn">
+      <button class="announce" id="announce" type="button" aria-label="查看当前教材"></button>
+      <div class="sec-title">正在学习</div>
+      <div id="book-list"></div>
+    </div>
+    <div class="body hidden" id="home-about">
+      <div class="sec-title small">当前版本</div>
+      <div class="about-block"><div class="line1" id="ab-name"></div><div class="line2" id="ab-ver"></div></div>
+      <div style="height:14px;background:#EFEFF2"></div>
+      <div class="sec-title small">更新说明</div>
+      <div class="updates" id="updates"></div>
+      <div id="about-extra"></div>
+      <div class="about-foot" id="ab-foot"></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="p-book">
+  <div class="nav"><button class="back" data-back type="button" aria-label="返回首页">‹</button><h1 id="book-title">实验</h1></div>
+  <div class="scroll" id="book-content"><div class="body">
+    <div class="prog">
+      <div class="ring"><svg width="96" height="96">
+        <circle cx="48" cy="48" r="42" fill="none" stroke="#EDEDF0" stroke-width="7"></circle>
+        <circle id="ring-fg" cx="48" cy="48" r="42" fill="none" stroke="#34C759" stroke-width="7"
+          stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="263.9"></circle>
+      </svg><div class="pct" id="ring-pct">0%</div></div>
+      <div class="lines"><div>已完成实验预习<b id="done-n">0</b></div><div>剩余实验预习<b id="todo-n">0</b></div></div>
+    </div>
+    <div class="list" id="exp-list"></div>
+    <div class="list-note" id="book-note"></div>
+  </div></div>
+  <div class="gate-wrap hidden" id="book-gate"><div class="gate" id="book-gate-text"></div></div>
+</section>
+
+<section class="page" id="p-exp">
+  <div class="nav"><button class="back" data-back type="button" aria-label="返回教材">‹</button><h1>实验预习</h1></div>
+  <div class="scroll" id="exp-scroll"><div class="body" id="exp-body">
+    <div class="exp-head">
+      <div class="t" id="exp-title"></div>
+      <div class="taskbar" style="margin-top:12px">
+        <span>任务点进度：<span id="task-cnt">0/0</span></span>
+        <span class="track"><i id="task-fill" style="width:0"></i></span>
+        <span id="task-pct">0%</span>
+      </div>
+    </div>
+    <div class="modules" id="modules"></div>
+  </div></div>
+  <div class="gate-wrap hidden" id="exp-gate"><div class="gate" id="exp-gate-text"></div></div>
+  <div class="bottombar" id="exp-bottombar">
+    <div class="cur">当前进度<b id="cur-step">安全教育</b></div>
+    <button class="btn" id="btn-continue" type="button">继续预习</button>
+  </div>
+</section>
+
+<section class="page" id="p-read">
+  <div class="nav"><button class="back" data-back type="button" aria-label="返回实验总览">‹</button><h1 id="read-head">实验预习</h1></div>
+  <div class="reader" id="reader"></div>
+  <div class="gate-wrap hidden" id="read-gate"><div class="gate" id="read-gate-text"></div></div>
+  <div class="pager" id="read-pager">
+    <button class="btn ghost" id="btn-prev" type="button">上一页</button>
+    <button class="btn" id="btn-next" type="button">下一页</button>
+  </div>
+</section>
+
+<section class="page" id="p-ai">
+  <div class="nav"><button class="back" data-back type="button" aria-label="返回实验总览">‹</button><h1>预设问答</h1></div>
+  <div class="scroll" id="ai-scroll"><div class="ai-wrap" id="ai-body"></div></div>
+  <div class="gate-wrap hidden" id="ai-gate"><div class="gate" id="ai-gate-text"></div></div>
+</section>
+
+<div class="mask hidden" id="mask-name">
+  <div class="sheet">
+    <h3>你的名字</h3>
+    <p>姓名只用于构建学习状态分享图，不作上传，仅保存在本机浏览器。</p>
+    <input id="name-input" maxlength="24" placeholder="例如：张三">
+    <div class="acts"><button class="btn ghost" id="name-cancel" type="button">取消</button><button class="btn" id="name-ok" type="button">保存</button></div>
+  </div>
+</div>
+
+<div class="mask hidden" id="mask-done">
+  <div class="done">
+    <div class="big">恭喜完成本实验预习</div>
+    <div class="sub" id="done-sub"></div>
+    <canvas id="share-canvas" width="1080" height="1350"></canvas>
+    <div class="hint hidden" id="share-hint">长按图片可保存；也可点下方按钮下载或调起系统分享。含姓名的分享图会公开显示姓名，请谨慎转发。</div>
+    <div class="acts">
+      <button class="btn ghost" id="done-back" type="button">返回</button>
+      <button class="btn" id="done-share" type="button">分享</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+<div class="global-err hidden" id="global-err" role="alert">页面出现异常，可尝试刷新</div>
+<div class="fatal hidden" id="fatal"><div><b>数据加载失败</b><div>请检查网络后刷新页面。</div></div></div>
+
+<script src="data/bundle.js"></script>
+<script src="assets/qr.js"></script>
+<script>
+(function(){
+'use strict';
+
+var DB = null, S = null;
+var state = { bookId:null, expId:null, card:0, view:"home", pendingShare:false, gate:false };
+var errShown = false, toastTimer = null, booted = false;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function escText(t){
+  return String(t).replace(/&(?!(?:[a-zA-Z][a-zA-Z0-9]*|#[0-9]+|#x[0-9a-fA-F]+);)/g,"&amp;")
+    .replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+/* 受控富文本白名单：sub/sup/b/br/em 与 span.md-red，其余一律按文本转义 */
+var ALLOWED_TAGS = {sub:1,sup:1,b:1,br:1,em:1};
+function sanitizeHtml(s){
+  s = (s==null?"":String(s));
+  var out = "", last = 0, m;
+  var re = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)((?:"[^"]*"|'[^']*'|[^>"'<])*)>/g;
+  while((m = re.exec(s))){
+    out += escText(s.slice(last, m.index));
+    last = re.lastIndex;
+    var closing = (m[1] === "/"), name = m[2].toLowerCase(), attrs = m[3] || "";
+    if(name === "br" && !closing){ out += "<br>"; continue; }
+    if(ALLOWED_TAGS[name] && !closing){ out += "<" + name + ">"; continue; }
+    if(ALLOWED_TAGS[name] && closing){ out += "</" + name + ">"; continue; }
+    if(name === "span"){
+      if(closing){ out += "</span>"; continue; }
+      if(/^\s*class\s*=\s*("md-red"|'md-red')\s*$/.test(attrs)){ out += '<span class="md-red">'; continue; }
+    }
+    out += escText(m[0]);
+  }
+  out += escText(s.slice(last));
+  return out;
+}
+function mdInline(s){
+  var t = escText(s).replace(/\r\n/g,"\n");
+  t = t.replace(/==([^=\n]+)==/g, '<span class="md-red">$1</span>');
+  t = t.replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>');
+  t = t.replace(/\n/g, "<br>");
+  return t;
+}
+function rich(html, text){
+  return (typeof html === "string" && html) ? sanitizeHtml(html) : mdInline(text==null?"":text);
+}
+
+function now(){ return Date.now(); }
+function ts(v){
+  if(!v) return 0;
+  if(typeof v === "number") return isFinite(v) ? v : 0;
+  var t = new Date(v).getTime();
+  return isFinite(t) ? t : 0;
+}
+function pad2(n){ return (n<10?"0":"") + n; }
+function fmtDate(v){
+  var t = ts(v); if(!t) return "";
+  var d = new Date(t);
+  return d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate() + " " + pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+}
+function fmtLeft(ms){
+  var d = ms - now(); if(!(d>0)) return "现在";
+  var h = Math.floor(d/3600000), m = Math.floor(d%3600000/60000);
+  if(h>=24) return Math.floor(h/24) + " 天 " + (h%24) + " 小时";
+  if(h>0) return h + " 小时 " + m + " 分钟";
+  return Math.max(m,1) + " 分钟";
+}
+function siteName(){
+  return (S && S.site && S.site.name) || "大学化学实验学习平台";
+}
+function setTitle(prefix){
+  document.title = prefix ? (prefix + " · " + siteName()) : siteName();
+}
+
+/* ---------------- 全局错误兜底 ---------------- */
+function reportError(msg){
+  try{ console.error("[chem-lab] " + (msg && msg.message ? msg.message : msg)); }catch(e){}
+  if(errShown) return;
+  errShown = true;
+  var el = $("global-err"); if(el) el.classList.remove("hidden");
+}
+function imgError(img){
+  if(!img || img.getAttribute("data-failed") === "1") return;
+  img.setAttribute("data-failed","1");
+  img.style.display = "none";
+  try{
+    if(img.parentNode){
+      var ph = document.createElement("div");
+      ph.className = "img-fail";
+      ph.textContent = "图片加载失败";
+      img.parentNode.insertBefore(ph, img.nextSibling);
+    }
+  }catch(e){}
+}
+window.addEventListener("error", function(e){
+  var t = e && e.target;
+  if(t && t.tagName === "IMG"){ imgError(t); return; }
+}, true);
+window.onerror = function(msg){ reportError(msg); return false; };
+window.addEventListener("unhandledrejection", function(e){ reportError(e && (e.reason && e.reason.message || e.reason) || "unhandledrejection"); });
+
+/* ---------------- 可见性 / 数据访问 ---------------- */
+function getBook(bid){ return (DB && DB.books && DB.books[bid]) || null; }
+function getExp(bid,eid){ return (DB && DB.exps && DB.exps[bid + "/" + eid]) || null; }
+function expsOf(b){
+  if(!b || !Array.isArray(b.experiments)) return [];
+  return b.experiments.slice().sort(function(a,c){ return ((a.order!=null?a.order:a.no)||0) - ((c.order!=null?c.order:c.no)||0); });
+}
+function findMeta(b,eid){
+  if(!b || !Array.isArray(b.experiments)) return null;
+  for(var i=0;i<b.experiments.length;i++){ if(b.experiments[i] && b.experiments[i].id === eid) return b.experiments[i]; }
+  return null;
+}
+function bookVisible(b){ return !!b && !b.hidden && !(ts(b.visibleAt) > now()); }
+function bookOpenAt(b){
+  var t = ts(b && b.visibleAt);
+  return t > now() ? t : 0;
+}
+function expOpenAt(exp, meta){
+  var t1 = ts(exp && exp.visibleAt), t2 = ts(meta && meta.visibleAt);
+  var t = Math.max(t1, t2);
+  return t > now() ? t : 0;
+}
+/* 返回首次可展示的“尚未开放”时间；0 表示无时间门禁 */
+function expGateAt(bid,eid){
+  var b = getBook(bid), exp = getExp(bid,eid), meta = findMeta(b,eid);
+  var bt = bookOpenAt(b), et = expOpenAt(exp, meta);
+  if(bt && et) return Math.max(bt, et);
+  return bt || et || 0;
+}
+function nextPending(b){
+  var arr = expsOf(b).filter(function(e){
+    return e && !e.hidden && ts(e.visibleAt) > now();
+  });
+  arr.sort(function(a,c){ return ts(a.visibleAt) - ts(c.visibleAt); });
+  return arr[0] || null;
+}
+function expTitleText(exp, meta){
+  var no = (meta && meta.no != null) ? meta.no : (exp && exp.no);
+  var full = (exp && (exp.full || exp.name)) || (meta && (meta.full || meta.name)) || "";
+  return (no != null ? "实验 " + no + " " : "") + full;
+}
+
+/* ---------------- 进度（localStorage） ---------------- */
+function pk(bid,eid){ return "chem-lab:" + bid + "/" + eid; }
+function getProg(bid,eid){
+  try{
+    var raw = localStorage.getItem(pk(bid,eid));
+    if(!raw) return [];
+    var v = JSON.parse(raw);
+    if(!Array.isArray(v)) return [];
+    var out = [];
+    for(var i=0;i<v.length;i++){ if(typeof v[i] === "string" && v[i]) out.push(v[i]); }
+    return out;
+  }catch(e){ return []; }
+}
+function writeProg(bid,eid,arr){
+  try{ localStorage.setItem(pk(bid,eid), JSON.stringify(arr)); }catch(e){}
+  return arr;
+}
+function addProg(bid,eid,id){
+  if(typeof id !== "string" || !id) return getProg(bid,eid);
+  var cur = getProg(bid,eid);
+  if(cur.indexOf(id) >= 0) return cur;
+  cur.push(id);
+  return writeProg(bid,eid,cur);
+}
+function expDone(bid,eid){
+  var exp = getExp(bid,eid);
+  if(!exp || !Array.isArray(exp.cards) || !exp.cards.length) return false;
+  var prog = getProg(bid,eid);
+  for(var i=0;i<exp.cards.length;i++){ if(prog.indexOf(exp.cards[i] && exp.cards[i].id) < 0) return false; }
+  return true;
+}
+
+/* ---------------- 新内容高亮（24h） ---------------- */
+function seenKey(bid,eid){ return "chem-lab:seen:" + bid + "/" + eid; }
+function isFresh(b,e){
+  if(!e || !e.visibleAt) return false;
+  var t = ts(e.visibleAt);
+  if(t > now()) return false;
+  if(now() - t > 24*3600*1000) return false;
+  try{ return localStorage.getItem(seenKey(b.id, e.id)) !== "1"; }catch(err){ return true; }
+}
+function markSeen(bid,eid){ try{ localStorage.setItem(seenKey(bid,eid),"1"); }catch(e){} }
+
+/* ---------------- 图片输出 ---------------- */
+function imgAttrs(extra){
+  return " loading=\"lazy\" decoding=\"async\"" + (extra || "");
+}
+function imgHtml(cls, src, alt, w, h, eager){
+  if(!src) return "";
+  var a = '<img class="' + esc(cls) + '" src="' + esc(src) + '" alt="' + esc(alt||"") + '"';
+  var wn = parseInt(w,10), hn = parseInt(h,10);
+  if(isFinite(wn) && wn>0) a += ' width="' + wn + '"';
+  if(isFinite(hn) && hn>0) a += ' height="' + hn + '"';
+  if(!eager) a += ' loading="lazy"';
+  a += ' decoding="async">';
+  return a;
+}
+
+/* ---------------- 路由 ---------------- */
+function parseHash(){
+  var h = location.hash.replace(/^#\/?/,"");
+  return h.split("/").filter(Boolean);
+}
+function go(h){ location.hash = h ? ("/" + h) : ""; }
+function route(){
+  try{ routeInner(); }catch(err){ reportError(err); }
+}
+function routeInner(){
+  var p = parseHash();
+  if(!p.length){ resetHomeTabs(); renderHome(); show("home"); setTitle(""); return; }
+  if(p[0] === "book"){ openBook(p[1]); return; }
+  if(p[0] === "exp"){
+    if(!p[1] || !p[2]){ unknownRoute(); return; }
+    if(p[3] === "read"){ openRead(p[1], p[2], p[4]); return; }
+    if(p[3] === "ai"){ openAI(p[1], p[2]); return; }
+    openExp(p[1], p[2]); return;
+  }
+  unknownRoute();
+}
+function unknownRoute(){
+  try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){ location.hash = ""; }
+  resetHomeTabs(); renderHome(); show("home"); setTitle("");
+  showToast("页面不存在，已返回首页");
+}
+function show(name){
+  ["home","book","exp","read","ai"].forEach(function(n){
+    var el = $("p-" + n); if(el) el.classList.toggle("active", n === name);
+  });
+  state.view = name;
+  try{ window.scrollTo(0,0); }catch(e){}
+}
+var PARTS = {
+  book: {body:"book-content", gate:"book-gate", gateText:"book-gate-text", extra:null},
+  exp:  {body:"exp-scroll",  gate:"exp-gate",  gateText:"exp-gate-text",  extra:"exp-bottombar"},
+  read: {body:"reader",      gate:"read-gate", gateText:"read-gate-text", extra:"read-pager"},
+  ai:   {body:"ai-scroll",   gate:"ai-gate",   gateText:"ai-gate-text",   extra:null}
+};
+function gateOff(page){
+  var p = PARTS[page]; if(!p) return;
+  var b = $(p.body), g = $(p.gate);
+  if(b) b.classList.remove("hidden");
+  if(g) g.classList.add("hidden");
+  if(p.extra && $(p.extra)) $(p.extra).classList.remove("hidden");
+  state.gate = false;
+}
+function gateOn(page, html){
+  var p = PARTS[page]; if(!p) return;
+  var b = $(p.body), g = $(p.gate), gt = $(p.gateText);
+  if(b) b.classList.add("hidden");
+  if(g) g.classList.remove("hidden");
+  if(gt) gt.innerHTML = html;
+  if(p.extra && $(p.extra)) $(p.extra).classList.add("hidden");
+  state.gate = true;
+  show(page);
+}
+function gateNotOpen(t){
+  return '<b>尚未开放</b>该内容将于 ' + esc(fmtDate(t)) + ' 开放<small>请于开放后刷新页面或重新进入。</small>';
+}
+function gateMissing(){ return '<b>内容不存在或已下线</b>请返回首页选择可见的教材与实验。'; }
+function gateEmpty(){ return '<b>该实验暂无内容</b>内容正在整理中，请稍后再来。'; }
+
+/* ---------------- 首页 ---------------- */
+function resetHomeTabs(){
+  var l = $("tab-learn"), a = $("tab-about"), hl = $("home-learn"), ha = $("home-about");
+  if(l) l.classList.add("on");
+  if(a) a.classList.remove("on");
+  if(hl) hl.classList.remove("hidden");
+  if(ha) ha.classList.add("hidden");
+}
+function coverHtml(src, alt){
+  return src ? imgHtml("cover", src, alt||"", null, null, true) : '<div class="cover"></div>';
+}
+function announceTarget(){
+  var cur = getBook(S && S.currentTextbook);
+  if(cur && bookVisible(cur)) return "book/" + cur.id;
+  var arr = booksSorted();
+  for(var i=0;i<arr.length;i++){ if(bookVisible(arr[i])) return "book/" + arr[i].id; }
+  return "";
+}
+function booksSorted(){
+  if(!DB || !DB.books) return [];
+  return Object.keys(DB.books).map(function(k){
+    var b = DB.books[k] || {};
+    b.id = k;
+    return b;
+  }).sort(function(a,b2){ return ((a.order||0) - (b2.order||0)) || (a.id < b2.id ? -1 : 1); });
+}
+function renderHome(){
+  if(!DB){ return; }
+  var ann = (S && S.announcement) || {};
+  var a = $("announce");
+  if(a){
+    var target = announceTarget();
+    if(target) a.setAttribute("data-go", target); else a.removeAttribute("data-go");
+    a.setAttribute("aria-label", ann.title || "查看当前教材");
+    a.innerHTML = ann.image
+      ? imgHtml("", ann.image, ann.title||"公告", null, null, true) + '<div class="cap">' + esc(ann.title||"") + '</div>'
+      : '<div class="ph">' + esc(ann.title||"公告头图") + '</div>';
+  }
+
+  var list = [];
+  var cur = getBook(S && S.currentTextbook);
+  if(cur && bookVisible(cur)){
+    var vis = expsOf(cur).filter(function(e){ return expVisibleForList(e, cur); });
+    var done = vis.filter(function(e){ return expDone(cur.id, e.id); }).length;
+    list.push('<button class="book" type="button" data-go="book/' + esc(cur.id) + '">' + coverHtml(cur.cover, cur.name) +
+      '<div class="meta"><div class="name">' + esc(cur.name) + '</div>' +
+      '<div class="sub">已完成 ' + done + ' / ' + vis.length + '</div></div></button>');
+  }
+  booksSorted().forEach(function(b){
+    if(b.id === (S && S.currentTextbook) || !bookVisible(b)) return;
+    var vis = expsOf(b).filter(function(e){ return expVisibleForList(e, b); });
+    list.push('<button class="book" type="button" data-go="book/' + esc(b.id) + '">' + coverHtml(b.cover, b.name) +
+      '<div class="meta"><div class="name">' + esc(b.name) + '</div>' +
+      '<div class="sub">已完成 ' + vis.filter(function(e){ return expDone(b.id, e.id); }).length + ' / ' + vis.length + '</div></div></button>');
+  });
+  var upcoming = booksSorted().filter(function(b){ return ts(b.visibleAt) > now(); });
+  if(upcoming.length){ list.push('<div class="book placeholder">即将有新的实验内容上线……</div>'); }
+  $("book-list").innerHTML = list.join("");
+
+  var site = (S && S.site) || {};
+  $("ab-name").textContent = (site.name||"") + (site.org ? " By " + site.org : "");
+  $("ab-ver").textContent = "V" + (site.version || "1.0.0");
+  $("updates").innerHTML = ((S && S.updates) || []).map(function(u){
+    var notes = ((u && u.notes) || []).map(function(n){ return '<div class="note">' + esc(n) + '</div>'; }).join("");
+    return '<div class="upd"><div class="top"><span>V' + esc((u&&u.version)||"") + '</span><span>' + esc((u&&u.date)||"") + '</span></div>' + notes + '</div>';
+  }).join("") || '<div class="upd"><div class="note">暂无更新说明</div></div>';
+
+  var extra = [];
+  extra.push(aboutSection("内容来源与版权", site.copyright));
+  extra.push(aboutSection("图片来源与署名", site.credits));
+  extra.push(aboutSection("免责声明", site.disclaimer));
+  extra.push(aboutSection("侵权与纠错联系", site.contact));
+  $("about-extra").innerHTML = extra.join("");
+  var ver = "V" + (site.version || "1.0.0");
+  if(site.updated) ver += " · 更新于 " + site.updated;
+  $("ab-foot").textContent = ver;
+}
+function aboutSection(title, text){
+  if(!text) return "";
+  return '<div class="sec-title tiny">' + esc(title) + '</div><div class="about-sec"><div class="about-note">' +
+    esc(text).replace(/\r?\n/g, "<br>") + '</div></div>';
+}
+function expVisibleForList(e,b){
+  if(!e || e.hidden) return false;
+  if(ts(e.visibleAt) > now()) return false;
+  return bookVisible(b);
+}
+
+/* ---------------- 教材页 ---------------- */
+function openBook(bid){
+  var b = getBook(bid);
+  state.bookId = b ? bid : null;
+  state.expId = null;
+  if(!b){
+    gateOn("book", gateMissing()); setTitle("内容不存在"); return;
+  }
+  var bt = bookOpenAt(b);
+  if(bt){
+    gateOn("book", gateNotOpen(bt)); setTitle(b.name); return;
+  }
+  gateOff("book");
+  $("book-title").textContent = b.name || "实验";
+  var vis = expsOf(b).filter(function(e){ return expVisibleForList(e, b); });
+  var done = vis.filter(function(e){ return expDone(bid, e.id); }).length;
+  var total = vis.length;
+  var pct = total ? Math.round(done/total*100) : 0;
+  $("done-n").textContent = done;
+  $("todo-n").textContent = total - done;
+  $("ring-pct").textContent = pct + "%";
+  var C = 2*Math.PI*42;
+  $("ring-fg").style.strokeDashoffset = String(C * (1 - done/(total||1)));
+
+  $("exp-list").innerHTML = vis.map(function(e){
+    var ok = expDone(bid, e.id);
+    var right = ok ? '<span class="tick">✓</span>' : '<span class="act">进入</span>';
+    var fresh = isFresh(b, e) ? " fresh" : "";
+    var no = (e.no != null) ? e.no : "";
+    return '<button class="row' + fresh + '" type="button" data-go="exp/' + esc(bid) + '/' + esc(e.id) + '"' +
+      ' data-eid="' + esc(e.id) + '"' + (fresh ? ' data-fresh="1"' : '') + '>' +
+      '<span class="no">实验 ' + esc(no) + '</span><span class="nm">' + esc(e.full || e.name || "") + '</span>' + right + '</button>';
+  }).join("") || '<div class="list-note">暂无可见实验</div>';
+
+  var note = "";
+  if(b.updateStatus === "updating"){
+    note = "内容正在扩充……";
+    var nx = nextPending(b);
+    if(nx){ note += '<br>下一个实验将于 ' + esc(fmtLeft(ts(nx.visibleAt))) + ' 后更新'; }
+  }
+  $("book-note").innerHTML = note;
+  setTitle(b.name);
+  show("book");
+}
+
+/* ---------------- 实验总览 ---------------- */
+function openExp(bid,eid){
+  var b = getBook(bid), exp = getExp(bid,eid);
+  if(!b || !exp){ gateOn("exp", gateMissing()); state.bookId = b ? bid : null; state.expId = eid; setTitle("内容不存在"); return; }
+  state.bookId = bid; state.expId = eid;
+  var at = expGateAt(bid,eid);
+  if(at){ gateOn("exp", gateNotOpen(at)); setTitle(expTitleText(exp, findMeta(b,eid))); return; }
+  var cards = Array.isArray(exp.cards) ? exp.cards : [];
+  if(!cards.length){ gateOn("exp", gateEmpty()); setTitle(expTitleText(exp, findMeta(b,eid))); return; }
+  gateOff("exp");
+
+  var meta = findMeta(b,eid) || {};
+  $("exp-title").textContent = "实验内容：" + (exp.full || exp.name || "");
+  var visited = getProg(bid,eid);
+  var tot = cards.length;
+  var got = 0;
+  cards.forEach(function(c){ if(c && visited.indexOf(c.id) >= 0) got++; });
+  var pct = Math.round(got/tot*100);
+  $("task-cnt").textContent = got + "/" + tot;
+  $("task-pct").textContent = pct + "%";
+  $("task-fill").style.width = pct + "%";
+
+  var safety = cards[0] || null;
+  var rest = cards.slice(1);
+  var sDone = !!(safety && visited.indexOf(safety.id) >= 0);
+  var rDone = 0;
+  rest.forEach(function(c){ if(c && visited.indexOf(c.id) >= 0) rDone++; });
+  $("cur-step").textContent = sDone ? "实验详情" : "安全教育";
+
+  var rows = [];
+  if(safety){
+    rows.push('<button class="mrow" type="button" data-go="exp/' + esc(bid) + '/' + esc(eid) + '/read/0">' +
+      '<span class="m">模块 1</span><span class="nm">安全教育</span>' +
+      '<span class="cnt">' + (sDone ? 1 : 0) + '/1</span><span class="go">进入</span></button>');
+  }
+  if(rest.length){
+    rows.push('<button class="mrow" type="button" data-go="exp/' + esc(bid) + '/' + esc(eid) + '/read/1">' +
+      '<span class="m">模块 2</span><span class="nm">实验详情</span>' +
+      '<span class="cnt">' + rDone + '/' + rest.length + '</span><span class="go">进入</span></button>');
+  }
+  rows.push('<button class="mrow ai-row" type="button" data-go="exp/' + esc(bid) + '/' + esc(eid) + '/ai">' +
+    '<span class="m"></span><span class="nm">预设问答<span class="badge">未接入大模型</span></span>' +
+    '<span class="go">查看</span></button>');
+  $("modules").innerHTML = rows.join("");
+
+  $("btn-continue").onclick = function(){
+    var idx = 0;
+    for(var i=0;i<cards.length;i++){ if(cards[i] && visited.indexOf(cards[i].id) < 0){ idx = i; break; } }
+    go("exp/" + bid + "/" + eid + "/read/" + idx);
+  };
+  setTitle(expTitleText(exp, meta));
+  show("exp");
+}
+
+/* ---------------- 阅读页 ---------------- */
+function openRead(bid,eid,rawIdx){
+  var exp = getExp(bid,eid), book = getBook(bid);
+  state.bookId = bid; state.expId = eid;
+  if(!exp || !book){ gateOn("read", gateMissing()); setTitle("内容不存在"); return; }
+  var at = expGateAt(bid,eid);
+  if(at){ gateOn("read", gateNotOpen(at)); setTitle(expTitleText(exp, findMeta(getBook(bid),eid))); return; }
+  var cards = Array.isArray(exp.cards) ? exp.cards : [];
+  if(!cards.length){ gateOn("read", gateEmpty()); setTitle(expTitleText(exp, findMeta(getBook(bid),eid))); return; }
+  gateOff("read");
+  var n = parseInt(rawIdx,10);
+  if(!isFinite(n) || n < 0) n = 0;
+  if(n > cards.length-1) n = cards.length-1;
+  state.card = n;
+  renderCard();
+  show("read");
+  setTitle(expTitleText(exp, findMeta(getBook(bid),eid)));
+}
+function syncReadHash(){
+  var h = "/exp/" + state.bookId + "/" + state.expId + "/read/" + state.card;
+  // 用 replaceState 同步页码但绝不改变部署路径（GitHub Pages 子路径 /Chemistry_Safety_.../ 下 h 不能作为绝对 URL）
+  try{ history.replaceState(null, "", location.pathname + location.search + "#" + h); }catch(e){}
+}
+function renderCard(){
+  var exp = getExp(state.bookId, state.expId);
+  if(!exp || !Array.isArray(exp.cards) || !exp.cards.length){ gateOn("read", gateEmpty()); return; }
+  if(state.card < 0) state.card = 0;
+  if(state.card > exp.cards.length-1) state.card = exp.cards.length-1;
+  var c = exp.cards[state.card];
+  if(!c){ gateOn("read", gateEmpty()); return; }
+  addProg(state.bookId, state.expId, c.id);
+  var book = getBook(state.bookId) || {};
+  var poster = "";
+  if(c.id === "safety" && book.safetyPoster){
+    poster = imgHtml("b-poster", book.safetyPoster, "安全教育海报", book.safetyPosterW, book.safetyPosterH, true);
+  }
+  var blocksHtml = (Array.isArray(c.blocks) ? c.blocks : []).map(renderBlock).join("");
+  var total = exp.cards.length;
+  $("reader").innerHTML =
+    '<div class="rhead"><span class="pg">第 ' + (state.card+1) + ' 页 / 共 ' + total + ' 页</span>' +
+      '<span class="tag">' + esc(c.title || "") + ' · ' + (state.card+1) + ' / ' + total +
+      (c.ai ? '<span class="ai-tag">AI 补充</span>' : '') + '</span></div>' +
+    '<div class="rtitle">' + esc(c.title || "") + '</div>' +
+    '<div class="rhint">' + esc(c.hint || "") + '</div>' +
+    '<div class="blocks">' + (poster + blocksHtml || '<div class="b-p">本页暂无内容。</div>') + '</div>';
+  $("reader").scrollTop = 0;
+  $("btn-prev").disabled = (state.card === 0);
+  $("btn-next").textContent = (state.card === total-1) ? "完成" : "下一页";
+  $("read-head").textContent = c.title || "实验预习";
+  syncReadHash();
+}
+function renderBlock(b){
+  if(!b || typeof b !== "object") return "";
+  var t = b.t || b.type;
+  if(t === "h") return '<div class="b-h">' + rich(b.html, b.text) + '</div>';
+  if(t === "p") return '<div class="b-p">' + rich(b.html, b.text) + '</div>';
+  if(t === "kv") return '<div class="b-kv"><span class="k">' + esc(b.k) + '</span><span class="v">' + rich(b.html, b.v) + '</span></div>';
+  if(t === "img") return imgHtml("b-img", b.src, b.alt || "", b.w, b.h, false);
+  if(t === "fig"){
+    if(!b.src) return "";
+    return '<figure class="b-fig">' + imgHtml("b-img", b.src, b.alt || "", b.w, b.h, false) +
+      (b.caption ? '<figcaption>' + mdInline(b.caption) + '</figcaption>' : '') + '</figure>';
+  }
+  if(t === "table"){
+    var rows = Array.isArray(b.rows) ? b.rows : [];
+    if(!rows.length) return "";
+    var header = b.header !== false;
+    var head = "";
+    var body = rows;
+    if(header){
+      head = '<thead><tr>' + (rows[0] || []).map(function(cell){ return '<th>' + mdInline(cell==null?"":String(cell)) + '</th>'; }).join("") + '</tr></thead>';
+      body = rows.slice(1);
+    }
+    var bodyHtml = body.map(function(row){
+      var cells = Array.isArray(row) ? row : [];
+      return '<tr>' + cells.map(function(cell){ return '<td>' + mdInline(cell==null?"":String(cell)) + '</td>'; }).join("") + '</tr>';
+    }).join("");
+    return '<div class="b-table-wrap"><table class="b-table">' + head + (bodyHtml ? '<tbody>' + bodyHtml + '</tbody>' : '') + '</table></div>';
+  }
+  return "";
+}
+
+/* ---------------- 预设问答页 ---------------- */
+function openAI(bid,eid){
+  var exp = getExp(bid,eid);
+  state.bookId = bid; state.expId = eid;
+  var b = getBook(bid);
+  if(!exp || !b){ gateOn("ai", gateMissing()); setTitle("内容不存在"); return; }
+  var at = expGateAt(bid,eid);
+  if(at){ gateOn("ai", gateNotOpen(at)); setTitle("预设问答"); return; }
+  gateOff("ai");
+  var qa = Array.isArray(exp.qa) ? exp.qa : [];
+  var html = '<div class="ai-idle">本页为根据实验材料整理的预设问答，暂未接入大模型；内容以指导教师现场要求为准。</div>';
+  if(qa.length){
+    html += qa.map(function(x){
+      return '<div class="ai-q"><div class="q">Q　' + esc(x && x.q) + '</div><div class="a">' + esc(x && x.a) + '</div></div>';
+    }).join("");
+  }else{
+    html += '<div class="ai-idle">该实验暂无预设问答。</div>';
+  }
+  html += '<div class="ai-note">预设问答 · 未接入大模型</div>';
+  $("ai-body").innerHTML = html;
+  setTitle("预设问答 · " + expTitleText(exp, findMeta(b,eid)));
+  show("ai");
+}
+
+/* ---------------- 完成 / 分享 ---------------- */
+function finishExp(){
+  var bid = state.bookId, eid = state.expId;
+  var exp = getExp(bid,eid);
+  if(!exp || !Array.isArray(exp.cards) || !exp.cards.length){ showToast("该实验暂无内容"); return; }
+  var cards = exp.cards;
+  var prog = getProg(bid,eid);
+  var missing = [];
+  cards.forEach(function(c, i){ if(c && prog.indexOf(c.id) < 0) missing.push(i); });
+  if(missing.length){
+    showToast("还有 " + missing.length + " 页未读，已跳到第一个未读页");
+    go("exp/" + bid + "/" + eid + "/read/" + missing[0]);
+    return;
+  }
+  var book = getBook(bid) || {};
+  $("done-sub").textContent = (book.name || "") + " · " + (exp.full || exp.name || "") + " · " + new Date().toLocaleDateString();
+  resetShareUI();
+  $("mask-done").classList.remove("hidden");
+}
+function resetShareUI(){
+  var cv = $("share-canvas");
+  cv.style.display = "none";
+  cv.removeAttribute("data-ready");
+  $("share-hint").classList.add("hidden");
+  var btn = $("done-share");
+  btn.textContent = "分享";
+  btn.removeAttribute("data-mode");
+}
+function generateShare(){
+  var cv = $("share-canvas");
+  try{
+    drawShare(cv);
+    cv.style.display = "block";
+    cv.setAttribute("data-ready","1");
+    $("share-hint").classList.remove("hidden");
+    var btn = $("done-share");
+    btn.textContent = "保存图片";
+    btn.setAttribute("data-mode","save");
+  }catch(e){
+    reportError(e);
+    showToast("分享图生成失败，请重试");
+  }
+}
+function shareFileName(){
+  var exp = getExp(state.bookId, state.expId);
+  var name = (exp && (exp.full || exp.name)) || "实验";
+  return "预习分享-" + String(name).replace(/[\\/:*?"<>|\s]/g,"_").slice(0,40) + ".png";
+}
+function saveShareImage(){
+  var cv = $("share-canvas");
+  if(!cv.getAttribute("data-ready")){ showToast("请先点“分享”生成图片"); return; }
+  var fname = shareFileName();
+  function download(){
+    try{
+      var url = cv.toDataURL("image/png");
+      var a = document.createElement("a");
+      a.href = url; a.download = fname;
+      document.body.appendChild(a); a.click();
+      if(a.parentNode) a.parentNode.removeChild(a);
+      showToast("已开始下载；若未保存，可长按图片保存");
+    }catch(e){ showToast("保存失败，请长按图片保存"); }
+  }
+  try{
+    if(window.File && navigator.canShare && cv.toBlob){
+      cv.toBlob(function(blob){
+        if(!blob){ download(); return; }
+        var file = new File([blob], fname, {type:"image/png"});
+        if(navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
+          navigator.share({files:[file], title:"化学实验预习分享"}).catch(function(err){
+            if(err && err.name === "AbortError") return;
+            download();
+          });
+        }else{ download(); }
+      }, "image/png");
+    }else{ download(); }
+  }catch(e){ download(); }
+}
+function truncCp(s, max){
+  var arr = Array.from(String(s==null?"":s));
+  return arr.length > max ? arr.slice(0,max).join("") : arr.join("");
+}
+function drawShare(cv){
+  if(!cv || !cv.getContext) throw new Error("canvas 不可用");
+  var ctx = cv.getContext("2d");
+  var exp = getExp(state.bookId, state.expId) || {};
+  var book = getBook(state.bookId) || {};
+  var expName = exp.full || exp.name || "";
+  var bookName = book.name || "";
+  var name = truncCp(getName(), 12) || "同学";
+  ctx.clearRect(0,0,1080,1350);
+  var g = ctx.createLinearGradient(0,0,1080,1350);
+  g.addColorStop(0,"#F0662F"); g.addColorStop(1,"#FF9A6B");
+  ctx.fillStyle = g; ctx.fillRect(0,0,1080,1350);
+  ctx.fillStyle = "rgba(255,255,255,.12)";
+  ctx.beginPath(); ctx.arc(900,180,260,0,Math.PI*2); ctx.fill();
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#fff";
+  ctx.font = "600 38px 'PingFang SC','Microsoft YaHei',sans-serif";
+  ctx.fillText("大学化学实验学习平台", 80, 170);
+  ctx.font = "700 60px 'PingFang SC','Microsoft YaHei',sans-serif";
+  ctx.fillText(name + " 同学", 80, 320);
+  ctx.font = "400 38px 'PingFang SC','Microsoft YaHei',sans-serif";
+  ctx.fillText("已完成本次实验预习", 80, 400);
+  ctx.fillStyle = "rgba(255,255,255,.94)";
+  ctx.fillRect(80, 470, 920, 400);
+  ctx.fillStyle = "#22222A";
+  ctx.font = "600 38px 'PingFang SC','Microsoft YaHei',sans-serif";
+  ctx.fillText("实验名称", 130, 570);
+  ctx.font = "700 50px 'PingFang SC','Microsoft YaHei',sans-serif";
+  wrapText(ctx, bookName + (expName ? "-" + expName : ""), 130, 650, 820, 62, 2);
+  ctx.fillStyle = "#6B6B72";
+  ctx.font = "400 30px 'PingFang SC','Microsoft YaHei',sans-serif";
+  ctx.fillText("完成时间　" + new Date().toLocaleString(), 130, 830);
+  var qrOk = drawShareQR(ctx, 410, 920, 260);
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(255,255,255,.96)";
+  if(qrOk){
+    ctx.font = "400 30px 'PingFang SC','Microsoft YaHei',sans-serif";
+    ctx.fillText("扫码查看本实验", 540, 1225);
+  }else{
+    ctx.font = "400 24px 'PingFang SC','Microsoft YaHei',sans-serif";
+    var shortUrl = location.origin + location.pathname;
+    if(shortUrl.length > 56) shortUrl = shortUrl.slice(0,55) + "…";
+    ctx.fillText("扫码进入平台：" + shortUrl, 540, 1215);
+  }
+  ctx.font = "400 28px 'PingFang SC','Microsoft YaHei',sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,.9)";
+  ctx.fillText("课前预习 · 安全教育 · 实验详情", 540, 1295);
+  ctx.textAlign = "left";
+}
+function drawShareQR(ctx, x0, y0, box){
+  var shortUrl = location.origin + location.pathname;
+  var deep = shortUrl + "#exp/" + state.bookId + "/" + state.expId;
+  var qr = safeQr(deep);
+  if(!qr) qr = safeQr(shortUrl);
+  if(!qr) return false;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(x0, y0, box, box);
+  var scale = Math.floor(box / (qr.size + 8));
+  if(scale < 1) return false;
+  var mods = qr.size * scale;
+  var ox = x0 + Math.floor((box - mods) / 2);
+  var oy = y0 + Math.floor((box - mods) / 2);
+  ctx.fillStyle = "#111114";
+  for(var r=0;r<qr.size;r++){
+    for(var c=0;c<qr.size;c++){
+      if(qr.m[r] && qr.m[r][c]) ctx.fillRect(ox + c*scale, oy + r*scale, scale, scale);
+    }
+  }
+  return true;
+}
+function safeQr(text){
+  try{
+    if(typeof qrMatrix !== "function") return null;
+    var q = qrMatrix(text);
+    if(!q || !q.size || !q.m) return null;
+    return q;
+  }catch(e){ return null; }
+}
+function wrapText(ctx, text, x, y, maxW, lh, maxLines){
+  maxLines = maxLines || 2;
+  var chars = Array.from(String(text==null?"":text));
+  var lines = [], cur = "";
+  for(var i=0;i<chars.length;i++){
+    var t2 = cur + chars[i];
+    if(ctx.measureText(t2).width > maxW && cur){ lines.push(cur); cur = chars[i]; }
+    else cur = t2;
+  }
+  if(cur) lines.push(cur);
+  if(lines.length > maxLines){
+    lines = lines.slice(0, maxLines);
+    var last = Array.from(lines[maxLines-1]);
+    while(last.length && ctx.measureText(last.join("") + "…").width > maxW){ last.pop(); }
+    lines[maxLines-1] = last.join("") + "…";
+  }
+  for(var j=0;j<lines.length;j++) ctx.fillText(lines[j], x, y + j*lh);
+}
+
+/* ---------------- 姓名 ---------------- */
+function getName(){ try{ return localStorage.getItem("chem-lab:name") || ""; }catch(e){ return ""; } }
+function setName(v){ try{ localStorage.setItem("chem-lab:name", truncCp(v, 24)); }catch(e){} }
+function paintAvatar(){
+  var n = Array.from(getName());
+  $("avatar").textContent = n.length ? n[n.length-1] : "我";
+  $("avatar").setAttribute("title", getName() ? ("当前姓名：" + getName()) : "设置姓名");
+}
+function openNameMask(){
+  $("name-input").value = getName();
+  $("mask-name").classList.remove("hidden");
+  setTimeout(function(){ try{ $("name-input").focus(); }catch(e){} }, 60);
+}
+function saveName(){
+  setName($("name-input").value.trim());
+  paintAvatar();
+  $("mask-name").classList.add("hidden");
+  if(state.pendingShare){
+    state.pendingShare = false;
+    $("mask-done").classList.remove("hidden");
+    generateShare();
+  }
+}
+
+/* ---------------- 返回 / 通知 ---------------- */
+function backTarget(){
+  var bid = state.bookId, eid = state.expId;
+  if(state.view === "read" || state.view === "ai") return (bid && eid) ? ("exp/" + bid + "/" + eid) : "";
+  if(state.view === "exp") return bid ? ("book/" + bid) : "";
+  return "";
+}
+function showToast(msg, ms){
+  var el = $("toast");
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.remove("hidden");
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.add("hidden"); toastTimer = null; }, ms || 2600);
+}
+function refreshProgress(){
+  var p = parseHash();
+  if(!p.length){ renderHome(); return; }
+  if(p[0] === "book" && state.view === "book"){ openBook(p[1]); return; }
+  if(p[0] === "exp" && state.view === "exp"){
+    if(p[1] && p[2]) openExp(p[1], p[2]);
+    return;
+  }
+  if(p[0] === "exp" && p[3] === "ai" && state.view === "ai"){ openAI(p[1], p[2]); return; }
+}
+
+/* ---------------- 事件绑定 ---------------- */
+function bindEvents(){
+  window.addEventListener("hashchange", route);
+
+  $("tab-learn").onclick = function(){ resetHomeTabs(); };
+  $("tab-about").onclick = function(){
+    $("tab-about").classList.add("on"); $("tab-learn").classList.remove("on");
+    $("home-about").classList.remove("hidden"); $("home-learn").classList.add("hidden");
+  };
+  $("avatar").onclick = openNameMask;
+  $("name-cancel").onclick = function(){
+    $("mask-name").classList.add("hidden");
+    if(state.pendingShare){ state.pendingShare = false; $("mask-done").classList.remove("hidden"); }
+  };
+  $("name-ok").onclick = saveName;
+  $("name-input").addEventListener("keydown", function(e){
+    if(e.key === "Enter" || e.keyCode === 13){ e.preventDefault(); saveName(); }
+  });
+  $("done-back").onclick = function(){
+    $("mask-done").classList.add("hidden");
+    resetShareUI();
+    if(state.bookId && state.expId) go("exp/" + state.bookId + "/" + state.expId);
+  };
+  $("done-share").onclick = function(){
+    if($("done-share").getAttribute("data-mode") === "save"){ saveShareImage(); return; }
+    if(!getName()){
+      state.pendingShare = true;
+      $("mask-done").classList.add("hidden");
+      openNameMask();
+      return;
+    }
+    generateShare();
+  };
+  $("btn-prev").onclick = function(){ if(state.card > 0){ state.card--; renderCard(); } };
+  $("btn-next").onclick = function(){
+    var exp = getExp(state.bookId, state.expId);
+    if(!exp || !Array.isArray(exp.cards) || !exp.cards.length) return;
+    if(state.card < exp.cards.length-1){ state.card++; renderCard(); }
+    else finishExp();
+  };
+  Array.prototype.forEach.call(document.querySelectorAll("[data-back]"), function(btn){
+    btn.addEventListener("click", function(){ go(backTarget()); });
+  });
+  document.addEventListener("click", function(e){
+    var el = e.target;
+    while(el && el !== document){
+      if(el.getAttribute && el.getAttribute("data-go")){
+        var target = el.getAttribute("data-go");
+        if(el.getAttribute("data-fresh") === "1" && state.bookId) markSeen(state.bookId, el.getAttribute("data-eid"));
+        e.preventDefault();
+        go(target);
+        return;
+      }
+      el = el.parentNode;
+    }
+  });
+  document.addEventListener("keydown", function(e){
+    if(state.view !== "read" || state.gate) return;
+    var tag = e.target && e.target.tagName;
+    if(tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    if(e.key === "ArrowLeft"){ e.preventDefault(); $("btn-prev").click(); }
+    else if(e.key === "ArrowRight"){ e.preventDefault(); $("btn-next").click(); }
+  });
+  (function(){
+    var el = $("reader"), sx = 0, sy = 0, on = false;
+    el.addEventListener("touchstart", function(e){ if(!e.touches || !e.touches.length) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; on = true; }, {passive:true});
+    el.addEventListener("touchend", function(e){
+      if(!on) return; on = false;
+      if(!e.changedTouches || !e.changedTouches.length) return;
+      var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      if(Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)*1.5){
+        if(dx < 0) $("btn-next").click(); else $("btn-prev").click();
+      }
+    }, {passive:true});
+  })();
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "visible") refreshProgress();
+  });
+  window.addEventListener("storage", function(e){
+    if(e.key && e.key.indexOf("chem-lab:") !== 0) return;
+    refreshProgress();
+  });
+}
+
+/* ---------------- 启动 ---------------- */
+function boot(){
+  var db = window.__CHEMLAB__;
+  if(!db || !db.site || !db.books || !db.exps){
+    $("fatal").classList.remove("hidden");
+    document.title = "数据加载失败";
+    return;
+  }
+  DB = db; S = db.site;
+  booted = true;
+  bindEvents();
+  paintAvatar();
+  renderHome();
+  route();
+  setInterval(function(){
+    var p = parseHash();
+    if(!p.length) renderHome();
+  }, 60000);
+}
+boot();
+})();
+</script>
+</body>
+</html>

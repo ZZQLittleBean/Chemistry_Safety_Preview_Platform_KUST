@@ -1,0 +1,61 @@
+{
+ "id": "analytical",
+ "name": "分析化学实验",
+ "order": 1,
+ "cover": "assets/analytical-cover.jpg",
+ "safetyPoster": "assets/safety-analytical.png",
+ "intro": "分析化学实验课前预习材料",
+ "hidden": false,
+ "visibleAt": "",
+ "updateStatus": "updating",
+ "experiments": [
+  {
+   "id": "h01",
+   "no": 1,
+   "name": "水的总硬度测定",
+   "full": "实验四十五 水的总硬度的测定",
+   "order": 1,
+   "hidden": false,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 26
+  },
+  {
+   "id": "e02",
+   "no": 2,
+   "name": "NaOH 溶液的配制与标定",
+   "full": "NaOH 溶液的配制与标定",
+   "order": 2,
+   "hidden": false,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 21
+  },
+  {
+   "id": "e03",
+   "no": 3,
+   "name": "EDTA 溶液的标定",
+   "full": "EDTA 溶液的标定",
+   "order": 3,
+   "hidden": false,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 21
+  },
+  {
+   "id": "e04",
+   "no": 4,
+   "name": "醋酸含量的测定",
+   "full": "醋酸含量的测定",
+   "order": 4,
+   "hidden": false,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 20
+  }
+ ],
+ "coverW": 296,
+ "coverH": 416,
+ "safetyPosterW": 750,
+ "safetyPosterH": 1552
+}
