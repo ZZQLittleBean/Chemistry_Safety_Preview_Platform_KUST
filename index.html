@@ -117,6 +117,10 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .bottombar .cur{font-size:15px;color:var(--ink3)}
 .bottombar .cur b{font-weight:500;color:var(--ink);font-size:17px;display:block;margin-top:2px}
 .bottombar .btn{margin-left:auto}
+.fblink{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--ink2);text-decoration:none;
+  padding:8px 12px;border-radius:9px;background:#F3F4F6;border:1px solid #E7E8EC;flex:none}
+.fblink:hover{color:var(--ink);background:#ECEEF2}
+#read-pager .fblink{margin-right:auto}
 .btn{border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:17px;font-weight:500;
   padding:14px 28px;cursor:pointer;transition:transform .12s}
 .btn:active{transform:scale(.98)}
@@ -243,6 +247,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
   <div class="gate-wrap hidden" id="exp-gate"><div class="gate" id="exp-gate-text"></div></div>
   <div class="bottombar" id="exp-bottombar">
     <div class="cur">当前进度<b id="cur-step">安全教育</b></div>
+    <a class="fblink" id="btn-feedback" href="#" target="_blank" rel="noopener">实验反馈</a>
     <button class="btn" id="btn-continue" type="button">继续预习</button>
   </div>
 </section>
@@ -252,6 +257,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
   <div class="reader" id="reader"></div>
   <div class="gate-wrap hidden" id="read-gate"><div class="gate" id="read-gate-text"></div></div>
   <div class="pager" id="read-pager">
+    <a class="fblink" id="btn-feedback-read" href="#" target="_blank" rel="noopener">反馈</a>
     <button class="btn ghost" id="btn-prev" type="button">上一页</button>
     <button class="btn" id="btn-next" type="button">下一页</button>
   </div>
@@ -398,6 +404,19 @@ window.addEventListener("error", function(e){
 }, true);
 window.onerror = function(msg){ reportError(msg); return false; };
 window.addEventListener("unhandledrejection", function(e){ reportError(e && (e.reason && e.reason.message || e.reason) || "unhandledrejection"); });
+
+/* ---------------- 反馈入口 ---------------- */
+var DEFAULT_FEEDBACK = "https://v.wjx.cn/vm/tWEQcpw.aspx";
+function feedbackUrlFor(meta){
+  var u = (meta && meta.feedbackUrl) || "";
+  if(!u && DB && DB.site && DB.site.site) u = DB.site.site.feedbackUrl || "";
+  return u || DEFAULT_FEEDBACK;
+}
+function applyFeedbackLink(el, meta){
+  if(!el) return;
+  var u = feedbackUrlFor(meta);
+  if(u){ el.href = u; el.classList.remove("hidden"); } else { el.classList.add("hidden"); }
+}
 
 /* ---------------- 可见性 / 数据访问 ---------------- */
 function getBook(bid){ return (DB && DB.books && DB.books[bid]) || null; }
@@ -745,6 +764,7 @@ function openExp(bid,eid){
     for(var i=0;i<cards.length;i++){ if(cards[i] && visited.indexOf(cards[i].id) < 0){ idx = i; break; } }
     go("exp/" + bid + "/" + eid + "/read/" + idx);
   };
+  applyFeedbackLink($("btn-feedback"), meta);
   setTitle(expTitleText(exp, meta));
   show("exp");
 }
@@ -765,7 +785,9 @@ function openRead(bid,eid,rawIdx){
   state.card = n;
   renderCard();
   show("read");
-  setTitle(expTitleText(exp, findMeta(getBook(bid),eid)));
+  var rm = findMeta(book, eid) || {};
+  applyFeedbackLink($("btn-feedback-read"), rm);
+  setTitle(expTitleText(exp, rm));
 }
 function syncReadHash(){
   var h = "/exp/" + state.bookId + "/" + state.expId + "/read/" + state.card;
