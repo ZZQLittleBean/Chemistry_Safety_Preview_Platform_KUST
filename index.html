@@ -67,14 +67,14 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .book.placeholder{justify-content:center;color:var(--ink3);font-size:15px;min-height:72px;border-style:dashed;
   border-color:#E0E0E4;background:#FBFBFC;box-shadow:none}
 
-.about-block{background:var(--card);padding:18px 0}
+.about-block{background:var(--card);padding:18px 16px;border-radius:12px}
 .about-block .line1{font-family:var(--serif);font-size:21px;line-height:1.55}
 .about-block .line2{font-size:13px;color:var(--ink3);margin-top:6px}
-.about-sec{background:var(--card);padding:4px 0 14px}
+.about-sec{background:var(--card);padding:14px 16px;border-radius:12px;margin-bottom:10px}
 .about-note{font-size:14px;line-height:1.8;color:var(--ink2);white-space:pre-wrap}
 .about-foot{font-size:12px;color:var(--ink3);padding:18px 2px 8px;text-align:center;line-height:1.7}
-.updates{background:var(--card);border-top:1px solid var(--line)}
-.upd{padding:14px 0;border-bottom:1px solid var(--line)}
+.updates{background:var(--card);border-top:1px solid var(--line);border-radius:12px;overflow:hidden}
+.upd{padding:14px 16px;border-bottom:1px solid var(--line)}
 .upd .top{display:flex;justify-content:space-between;font-size:15px;color:var(--ink3);margin-bottom:4px}
 .upd .note{font-size:15px;color:var(--ink2);margin-top:2px}
 
@@ -217,7 +217,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .finish .finacts .btn{width:100%;padding:13px 0;font-size:16px}
 
 /* 关于页：加大左右边距 + 强制折行 */
-#home-about{padding-left:24px;padding-right:24px}
+#home-about{padding-left:18px;padding-right:18px}
 .about-note,.about-foot,.about-block .line1,.about-block .line2,.updates,.updates *{
   overflow-wrap:anywhere;word-break:break-word;hyphens:auto}
 .body{overflow-wrap:anywhere}
@@ -336,6 +336,17 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
   <div class="scroll" id="ai-scroll"><div class="ai-wrap" id="ai-body"></div></div>
   <div class="gate-wrap hidden" id="ai-gate"><div class="gate" id="ai-gate-text"></div></div>
 </section>
+
+<div class="mask hidden" id="mask-ext">
+  <div class="sheet">
+    <h3>即将打开第三方页面</h3>
+    <p>你即将进入外部反馈表单（v.wjx.cn），该页面由第三方提供，内容与隐私政策由对方负责。是否继续？</p>
+    <div class="acts">
+      <button class="btn ghost" id="ext-cancel" type="button">取消</button>
+      <button class="btn" id="ext-ok" type="button">继续</button>
+    </div>
+  </div>
+</div>
 
 <div class="mask hidden" id="mask-name">
   <div class="sheet">
@@ -954,7 +965,14 @@ function refreshFinishCard(){
   var book = getBook(state.bookId) || {};
   var fin = $("read-deck") && $("read-deck").querySelector(".paper.finish");
   if(!fin || !exp) return;
-  fin.innerHTML = finishInner(exp, book, Array.isArray(exp.cards) ? exp.cards : []);
+  var cards = Array.isArray(exp.cards) ? exp.cards : [];
+  var prog = getProg(state.bookId, state.expId);
+  var missing = [];
+  cards.forEach(function(c,i){ if(c && prog.indexOf(c.id) < 0) missing.push(i); });
+  var key = missing.length ? ("m" + missing.length + "-" + missing[0]) : "done";
+  if(fin.getAttribute("data-state") === key) return;
+  fin.setAttribute("data-state", key);
+  fin.innerHTML = finishInner(exp, book, cards);
   bindFinish();
 }
 function bindFinish(){
@@ -1317,6 +1335,68 @@ function bindImageViewer(){
   document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeImageViewer(); });
 }
 
+/* ---------------- 反馈悬浮键：拖动 + 二次确认 ---------------- */
+function bindFeedback(){
+  var fb = $("btn-feedback-read");
+  if(!fb) return;
+  try{
+    var saved = JSON.parse(localStorage.getItem("chem-lab:fbpos") || "null");
+    if(saved && typeof saved.x === "number"){
+      fb.style.left = Math.max(8, Math.min(window.innerWidth - 80, saved.x)) + "px";
+      fb.style.top = Math.max(8, Math.min(window.innerHeight - 60, saved.y)) + "px";
+      fb.style.right = "auto"; fb.style.bottom = "auto";
+    }
+  }catch(e){}
+  var drag = false, sx = 0, sy = 0, ox = 0, oy = 0, moved = 0;
+  fb.addEventListener("pointerdown", function(e){
+    if(e.button != null && e.button !== 0) return;
+    drag = true; moved = 0; sx = e.clientX; sy = e.clientY;
+    var r = fb.getBoundingClientRect(); ox = r.left; oy = r.top;
+    fb.style.left = ox + "px"; fb.style.top = oy + "px";
+    fb.style.right = "auto"; fb.style.bottom = "auto";
+    try{ fb.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  fb.addEventListener("pointermove", function(e){
+    if(!drag) return;
+    var dx = e.clientX - sx, dy = e.clientY - sy;
+    moved = Math.max(moved, Math.abs(dx) + Math.abs(dy));
+    var x = Math.max(8, Math.min(window.innerWidth - fb.offsetWidth - 8, ox + dx));
+    var y = Math.max(8, Math.min(window.innerHeight - fb.offsetHeight - 8, oy + dy));
+    fb.style.left = x + "px"; fb.style.top = y + "px";
+  });
+  function endDrag(){
+    if(!drag) return;
+    drag = false;
+    if(moved > 6){
+      fb.setAttribute("data-dragged","1");
+      setTimeout(function(){ fb.removeAttribute("data-dragged"); }, 350);
+      try{ localStorage.setItem("chem-lab:fbpos", JSON.stringify({
+        x: parseInt(fb.style.left,10), y: parseInt(fb.style.top,10) })); }catch(err){}
+    }
+  }
+  fb.addEventListener("pointerup", endDrag);
+  fb.addEventListener("pointercancel", endDrag);
+}
+function bindExtConfirm(){
+  document.addEventListener("click", function(e){
+    var a = e.target.closest && e.target.closest("#btn-feedback, #btn-feedback-read");
+    if(!a) return;
+    if(a.getAttribute("data-dragged") === "1") return;
+    e.preventDefault(); e.stopPropagation();
+    state.pendingExt = a.getAttribute("href") || "";
+    $("mask-ext").classList.remove("hidden");
+  }, true);
+  $("ext-cancel").onclick = function(){
+    $("mask-ext").classList.add("hidden"); state.pendingExt = "";
+  };
+  $("ext-ok").onclick = function(){
+    $("mask-ext").classList.add("hidden");
+    var u = state.pendingExt || ""; state.pendingExt = "";
+    if(!u) return;
+    try{ window.open(u, "_blank", "noopener"); }catch(err){ location.href = u; }
+  };
+}
+
 /* ---------------- 返回 / 通知 ---------------- */
 function backTarget(){
   var bid = state.bookId, eid = state.expId;
@@ -1382,6 +1462,8 @@ window.addEventListener("hashchange", route);
   });
   /* 翻页：滚动监听 + 页码点 + 指针拖拽 */
   bindImageViewer();
+  bindFeedback();
+  bindExtConfirm();
   $("read-deck").addEventListener("scroll", onDeckScroll, {passive:true});
   $("read-dots").addEventListener("click", function(e){
     var t = e.target;
@@ -1390,12 +1472,21 @@ window.addEventListener("hashchange", route);
     }
   });
   (function(){
-    var deck = $("read-deck"), down = false, x0 = 0, l0 = 0;
-    deck.addEventListener("pointerdown", function(e){ if(ivState.open) return; down = true; x0 = e.clientX; l0 = deck.scrollLeft; });
-    document.addEventListener("pointermove", function(e){ if(down) deck.scrollLeft = l0 - (e.clientX - x0); });
+    var deck = $("read-deck"), down = false, x0 = 0, l0 = 0, moved = 0;
+    deck.addEventListener("pointerdown", function(e){
+      if(ivState.open) return;
+      down = true; moved = 0; x0 = e.clientX; l0 = deck.scrollLeft;
+    });
+    document.addEventListener("pointermove", function(e){
+      if(!down) return;
+      var dx = e.clientX - x0;
+      moved = Math.max(moved, Math.abs(dx));
+      deck.scrollLeft = l0 - dx;
+    });
     document.addEventListener("pointerup", function(){
-      if(!down) return; down = false;
-      goRead(Math.round(deck.scrollLeft / Math.max(1, deck.clientWidth)));
+      if(!down) return;
+      down = false;
+      if(moved > 10) goRead(Math.round(deck.scrollLeft / Math.max(1, deck.clientWidth)));
     });
   })();
   Array.prototype.forEach.call(document.querySelectorAll("[data-back]"), function(btn){
