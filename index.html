@@ -175,6 +175,25 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .readbar i{display:block;height:100%;width:20%;border-radius:3px;
   background:linear-gradient(90deg,var(--accent),#F5A36C);transition:width .32s ease}
 .rnum{position:absolute;right:18px;font-size:12px;color:var(--ink3)}
+.deck,.paper{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none}
+.paper img{cursor:zoom-in}
+.fb-float{position:absolute;right:16px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:30;
+  display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;font-size:14px;
+  color:var(--ink);text-decoration:none;background:#fff;border:1px solid #E7E8EC;
+  box-shadow:0 8px 24px rgba(24,40,70,.18)}
+.fb-float:active{transform:scale(.97);background:#F3F4F6}
+.img-viewer{position:fixed;inset:0;z-index:200;background:rgba(10,14,20,.93);display:flex;
+  align-items:center;justify-content:center;overflow:hidden;touch-action:none}
+.img-viewer.hidden{display:none!important}
+.img-viewer img{max-width:none;max-height:none;cursor:grab;user-select:none;-webkit-user-drag:none;will-change:transform}
+.img-viewer img:active{cursor:grabbing}
+.img-viewer .iv-hint{position:absolute;left:16px;top:16px;color:rgba(255,255,255,.72);
+  font-size:12px;line-height:1.6;max-width:60%;pointer-events:none}
+.iv-zoombar{position:absolute;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  display:flex;gap:12px;align-items:center}
+.iv-zoombar button{width:46px;height:46px;border-radius:50%;border:none;background:rgba(255,255,255,.94);
+  color:#1F2B36;font-size:19px;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+.iv-zoombar button:active{transform:scale(.94)}
 #read-pager{justify-content:center;align-items:center;gap:10px}
 #read-pager .fblink{position:absolute;left:18px;margin-right:0}
 .dots{display:flex;align-items:center;gap:8px}
@@ -307,9 +326,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
   <div class="deck" id="read-deck"></div>
   <div class="gate-wrap hidden" id="read-gate"><div class="gate" id="read-gate-text"></div></div>
   <div class="pager" id="read-pager">
-    <a class="fblink" id="btn-feedback-read" href="#" target="_blank" rel="noopener">反馈</a>
     <div class="dots" id="read-dots"></div>
   </div>
+  <a class="fb-float" id="btn-feedback-read" href="#" target="_blank" rel="noopener" aria-label="实验反馈">💬 反馈</a>
 </section>
 
 <section class="page" id="p-ai">
@@ -329,6 +348,15 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 
 
 
+<div class="img-viewer hidden" id="img-viewer">
+  <img id="img-viewer-img" alt="">
+  <div class="iv-hint">滚轮 / 双指缩放 · 拖动平移 · 点击任意处关闭</div>
+  <div class="iv-zoombar">
+    <button id="iv-out" type="button" aria-label="缩小">−</button>
+    <button id="iv-reset" type="button" aria-label="恢复原始大小">1:1</button>
+    <button id="iv-in" type="button" aria-label="放大">＋</button>
+  </div>
+</div>
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 <div class="global-err hidden" id="global-err" role="alert">页面出现异常，可尝试刷新</div>
 <div class="fatal hidden" id="fatal"><div><b>数据加载失败</b><div>请检查网络后刷新页面。</div></div></div>
@@ -1192,6 +1220,103 @@ function saveName(){
   }
 }
 
+/* ---------------- 图片查看器 ---------------- */
+var ivState = { open:false, scale:1, x:0, y:0, dragging:false, moved:0, sx:0, sy:0, ox:0, oy:0 };
+function ivEl(){ return $("img-viewer"); }
+function ivImg(){ return $("img-viewer-img"); }
+function ivApply(){
+  ivImg().style.transform = "translate(" + ivState.x + "px," + ivState.y + "px) scale(" + ivState.scale + ")";
+}
+function ivSetScale(sc, cx, cy){
+  var old = ivState.scale;
+  ivState.scale = Math.max(0.4, Math.min(8, sc));
+  if(cx != null && cy != null){
+    var k = ivState.scale / old - 1;
+    ivState.x -= (cx - window.innerWidth / 2) * k;
+    ivState.y -= (cy - window.innerHeight / 2) * k;
+  }
+  ivApply();
+}
+function ivFitScale(){
+  var im = ivImg();
+  var w = im.naturalWidth || 1, h = im.naturalHeight || 1;
+  return Math.min(1, (window.innerWidth * 0.94) / w, (window.innerHeight * 0.8) / h);
+}
+function ivReset(){
+  ivState.x = 0; ivState.y = 0; ivState.scale = ivFitScale();
+  ivApply();
+}
+function openImageViewer(src){
+  if(!src) return;
+  var im = ivImg();
+  ivState.open = true; ivState.x = 0; ivState.y = 0; ivState.scale = 1;
+  im.onload = function(){ if(ivState.open) ivReset(); };
+  im.src = src;
+  if(im.complete && im.naturalWidth) ivReset();
+  ivApply();
+  ivEl().classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+function closeImageViewer(){
+  if(!ivState.open) return;
+  ivState.open = false;
+  ivEl().classList.add("hidden");
+  document.body.style.overflow = "";
+}
+function bindImageViewer(){
+  var el = ivEl();
+  document.addEventListener("click", function(e){
+    var t = e.target;
+    if(!t || !t.closest) return;
+    if(t.closest("#img-viewer")) return;
+    var img = t.closest(".paper img");
+    if(img && img.getAttribute("src")){ e.preventDefault(); openImageViewer(img.src); }
+  });
+  el.addEventListener("wheel", function(e){
+    if(!ivState.open) return;
+    e.preventDefault();
+    ivSetScale(ivState.scale * Math.exp(-e.deltaY * 0.0016), e.clientX, e.clientY);
+  }, {passive:false});
+  el.addEventListener("pointerdown", function(e){
+    if(e.target.closest && e.target.closest(".iv-zoombar")) return;
+    ivState.dragging = true; ivState.moved = 0;
+    ivState.sx = e.clientX; ivState.sy = e.clientY;
+    ivState.ox = ivState.x; ivState.oy = ivState.y;
+  });
+  el.addEventListener("pointermove", function(e){
+    if(!ivState.dragging) return;
+    var dx = e.clientX - ivState.sx, dy = e.clientY - ivState.sy;
+    ivState.moved = Math.max(ivState.moved, Math.abs(dx) + Math.abs(dy));
+    ivState.x = ivState.ox + dx; ivState.y = ivState.oy + dy;
+    ivApply();
+  });
+  el.addEventListener("pointerup", function(){
+    if(!ivState.dragging) return;
+    ivState.dragging = false;
+    if(ivState.moved < 6) closeImageViewer();
+  });
+  el.addEventListener("pointercancel", function(){ ivState.dragging = false; });
+  var pinchStart = 0, pinchBase = 1;
+  el.addEventListener("touchstart", function(e){
+    if(e.touches.length === 2){
+      pinchStart = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      pinchBase = ivState.scale;
+    }
+  }, {passive:true});
+  el.addEventListener("touchmove", function(e){
+    if(e.touches.length === 2 && pinchStart){
+      e.preventDefault();
+      var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      ivState.scale = Math.max(0.4, Math.min(8, pinchBase * d / pinchStart));
+      ivApply();
+    }
+  }, {passive:false});
+  $("iv-in").onclick = function(e){ e.stopPropagation(); ivSetScale(ivState.scale * 1.25); };
+  $("iv-out").onclick = function(e){ e.stopPropagation(); ivSetScale(ivState.scale / 1.25); };
+  $("iv-reset").onclick = function(e){ e.stopPropagation(); ivReset(); };
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeImageViewer(); });
+}
+
 /* ---------------- 返回 / 通知 ---------------- */
 function backTarget(){
   var bid = state.bookId, eid = state.expId;
@@ -1256,6 +1381,7 @@ window.addEventListener("hashchange", route);
     if(e.key === "Enter" || e.keyCode === 13){ e.preventDefault(); saveName(); }
   });
   /* 翻页：滚动监听 + 页码点 + 指针拖拽 */
+  bindImageViewer();
   $("read-deck").addEventListener("scroll", onDeckScroll, {passive:true});
   $("read-dots").addEventListener("click", function(e){
     var t = e.target;
@@ -1265,7 +1391,7 @@ window.addEventListener("hashchange", route);
   });
   (function(){
     var deck = $("read-deck"), down = false, x0 = 0, l0 = 0;
-    deck.addEventListener("pointerdown", function(e){ down = true; x0 = e.clientX; l0 = deck.scrollLeft; });
+    deck.addEventListener("pointerdown", function(e){ if(ivState.open) return; down = true; x0 = e.clientX; l0 = deck.scrollLeft; });
     document.addEventListener("pointermove", function(e){ if(down) deck.scrollLeft = l0 - (e.clientX - x0); });
     document.addEventListener("pointerup", function(){
       if(!down) return; down = false;
