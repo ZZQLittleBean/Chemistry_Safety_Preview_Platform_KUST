@@ -144,8 +144,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .md-red{color:#D93025}
 .b-fig{margin:6px 0 16px}
 .b-fig figcaption{font-size:12.5px;color:#6B6B72;text-align:center;margin-top:6px;line-height:1.6}
-.b-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px 0 16px}
-.b-table{border-collapse:collapse;min-width:100%;font-size:13.5px}
+.b-table-wrap{max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;touch-action:pan-x;margin:6px 0 16px}
+.b-table{border-collapse:collapse;min-width:100%;width:max-content;max-width:none;font-size:13.5px}
 .b-table th,.b-table td{border:1px solid #E4E4E8;padding:8px 10px;text-align:left;vertical-align:top;white-space:normal}
 .b-table th{background:#F6F7F9;font-weight:600}
 .img-fail{display:block;padding:14px 12px;margin:6px 0 14px;border-radius:10px;background:#EFEFF2;
@@ -158,11 +159,11 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 .deck{flex:1;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;
   overscroll-behavior-x:contain;scrollbar-width:none;padding:2px 0 4px}
 .deck::-webkit-scrollbar{display:none}
-.sheetx{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;display:flex;align-items:stretch;padding:0 14px 6px}
-.paper{width:100%;max-width:760px;margin:0 auto;background:#fff;border-radius:18px;border-left:5px solid var(--c,#F0662F);
+.sheetx{flex:0 0 100%;min-width:0;scroll-snap-align:center;scroll-snap-stop:always;display:flex;align-items:stretch;padding:0 14px 6px}
+.paper{width:100%;max-width:760px;min-width:0;margin:0 auto;background:#fff;border-radius:18px;border-left:5px solid var(--c,#F0662F);
   box-shadow:0 6px 22px rgba(24,40,70,.08);padding:16px 16px 20px;overflow-y:auto;position:relative;scrollbar-width:none}
 .paper::-webkit-scrollbar{display:none}
-.paper .blocks{max-width:none;padding-bottom:8px}
+.paper .blocks{max-width:none;min-width:0;padding-bottom:8px}
 .ptag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:1px;color:#fff;
   background:var(--c,#F0662F);border-radius:6px;padding:3px 9px}
 .ptitle{font-family:var(--serif);font-size:23px;font-weight:700;line-height:1.35;
@@ -1277,17 +1278,24 @@ function openImageViewer(src){
   ivEl().classList.remove("hidden");
   document.body.style.overflow = "hidden";
 }
+var ivClosedAt = 0;
 function closeImageViewer(){
   if(!ivState.open) return;
   ivState.open = false;
+  ivClosedAt = Date.now();
   ivEl().classList.add("hidden");
   document.body.style.overflow = "";
 }
 function bindImageViewer(){
   var el = ivEl();
   document.addEventListener("click", function(e){
+    if(Date.now() - ivClosedAt < 450){ e.preventDefault(); e.stopPropagation(); }
+  }, true);
+  document.addEventListener("click", function(e){
     var t = e.target;
     if(!t || !t.closest) return;
+    if(ivState.open) return;
+    if(Date.now() - ivClosedAt < 450) return;
     if(t.closest("#img-viewer")) return;
     var img = t.closest(".paper img");
     if(img && img.getAttribute("src")){ e.preventDefault(); openImageViewer(img.src); }
@@ -1335,6 +1343,25 @@ function bindImageViewer(){
   $("iv-out").onclick = function(e){ e.stopPropagation(); ivSetScale(ivState.scale / 1.25); };
   $("iv-reset").onclick = function(e){ e.stopPropagation(); ivReset(); };
   document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeImageViewer(); });
+}
+
+/* ---------------- 表格横向拖动 ---------------- */
+function bindTableDrag(){
+  var dragEl = null, sx = 0, sl = 0;
+  document.addEventListener("pointerdown", function(e){
+    var w = e.target && e.target.closest && e.target.closest(".b-table-wrap");
+    if(!w) return;
+    dragEl = w; sx = e.clientX; sl = w.scrollLeft;
+    w.style.cursor = "grabbing";
+    try{ w.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  document.addEventListener("pointermove", function(e){
+    if(!dragEl) return;
+    dragEl.scrollLeft = sl - (e.clientX - sx);
+  });
+  function end(){ if(dragEl){ dragEl.style.cursor = ""; dragEl = null; } }
+  document.addEventListener("pointerup", end);
+  document.addEventListener("pointercancel", end);
 }
 
 /* ---------------- 反馈悬浮键：拖动 + 二次确认 ---------------- */
@@ -1471,6 +1498,7 @@ window.addEventListener("hashchange", route);
   });
   /* 翻页：滚动监听 + 页码点 + 指针拖拽 */
   bindImageViewer();
+  bindTableDrag();
   bindFeedback();
   bindExtConfirm();
   $("read-deck").addEventListener("scroll", onDeckScroll, {passive:true});
@@ -1484,6 +1512,7 @@ window.addEventListener("hashchange", route);
     var deck = $("read-deck"), down = false, x0 = 0, l0 = 0, moved = 0;
     deck.addEventListener("pointerdown", function(e){
       if(ivState.open) return;
+      if(e.target && e.target.closest && e.target.closest(".b-table-wrap")) return;
       down = true; moved = 0; x0 = e.clientX; l0 = deck.scrollLeft;
     });
     document.addEventListener("pointermove", function(e){
