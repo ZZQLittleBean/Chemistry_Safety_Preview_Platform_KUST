@@ -1372,6 +1372,7 @@ function bindFeedback(){
     if(!drag) return;
     drag = false;
     if(moved > 6){
+      fbDragStamp = Date.now();
       fb.setAttribute("data-dragged","1");
       setTimeout(function(){ fb.removeAttribute("data-dragged"); }, 350);
       try{ localStorage.setItem("chem-lab:fbpos", JSON.stringify({
@@ -1380,13 +1381,17 @@ function bindFeedback(){
   }
   fb.addEventListener("pointerup", endDrag);
   fb.addEventListener("pointercancel", endDrag);
+  fb.addEventListener("click", function(e){ e.preventDefault(); });
 }
+var fbDragStamp = 0;
 function bindExtConfirm(){
   document.addEventListener("click", function(e){
     var a = e.target.closest && e.target.closest("#btn-feedback, #btn-feedback-read");
     if(!a) return;
-    if(a.getAttribute("data-dragged") === "1") return;
+    // 无论是否拖动，都先阻止原生链接跳转，避免拖动结束误开外链
     e.preventDefault(); e.stopPropagation();
+    if(a.getAttribute("data-dragged") === "1") return;
+    if(Date.now() - fbDragStamp < 600) return;
     state.pendingExt = a.getAttribute("href") || "";
     $("mask-ext").classList.remove("hidden");
   }, true);
