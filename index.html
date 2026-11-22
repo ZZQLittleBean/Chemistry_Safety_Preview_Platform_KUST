@@ -520,9 +520,19 @@ function applyFeedbackLink(el, meta){
 /* ---------------- 可见性 / 数据访问 ---------------- */
 function getBook(bid){ return (DB && DB.books && DB.books[bid]) || null; }
 function getExp(bid,eid){ return (DB && DB.exps && DB.exps[bid + "/" + eid]) || null; }
+function expNoValue(e){
+  var n = parseInt(e && e.no, 10);
+  if(!isFinite(n)) n = 100000;
+  return n;
+}
 function expsOf(b){
   if(!b || !Array.isArray(b.experiments)) return [];
-  return b.experiments.slice().sort(function(a,c){ return ((a.order!=null?a.order:a.no)||0) - ((c.order!=null?c.order:c.no)||0); });
+  // 按“实验编号”排序；order 只在编号相同时作为参考
+  return b.experiments.slice().sort(function(a,c){
+    var d = expNoValue(a) - expNoValue(c);
+    if(d) return d;
+    return ((a.order!=null?a.order:0) - (c.order!=null?c.order:0));
+  });
 }
 function findMeta(b,eid){
   if(!b || !Array.isArray(b.experiments)) return null;
@@ -792,11 +802,12 @@ function openBook(bid){
   var C = 2*Math.PI*42;
   $("ring-fg").style.strokeDashoffset = String(C * (1 - done/(total||1)));
 
-  $("exp-list").innerHTML = vis.map(function(e){
+  $("exp-list").innerHTML = vis.map(function(e, i){
     var ok = expDone(bid, e.id);
     var right = ok ? '<span class="tick">✓</span>' : '<span class="act">进入</span>';
     var fresh = isFresh(b, e) ? " fresh" : "";
-    var no = (e.no != null) ? e.no : "";
+    // 显示序号：按可见实验重新从 1 编号（仅展示，不改数据与链接）
+    var no = i + 1;
     return '<button class="row' + fresh + '" type="button" data-go="exp/' + esc(bid) + '/' + esc(e.id) + '"' +
       ' data-eid="' + esc(e.id) + '"' + (fresh ? ' data-fresh="1"' : '') + '>' +
       '<span class="no">实验 ' + esc(no) + '</span><span class="nm">' + esc(e.full || e.name || "") + '</span>' + right + '</button>';
