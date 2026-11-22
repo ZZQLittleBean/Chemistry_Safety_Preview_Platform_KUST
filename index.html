@@ -394,8 +394,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-off
 <div class="global-err hidden" id="global-err" role="alert">页面出现异常，可尝试刷新</div>
 <div class="fatal hidden" id="fatal"><div><b>数据加载失败</b><div>请检查网络后刷新页面。</div></div></div>
 
-<script src="data/bundle.js?v=1.1.2"></script>
-<script src="assets/qr.js?v=1.1.2"></script>
+<script>document.write('<script src="data/bundle.js?v=' + Date.now() + '"><\/script>');</script>
+<script>document.write('<script src="assets/qr.js?v=' + Date.now() + '"><\/script>');</script>
 <script>
 (function(){
 'use strict';
