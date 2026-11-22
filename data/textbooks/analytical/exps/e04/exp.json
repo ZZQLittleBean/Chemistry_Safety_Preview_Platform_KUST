@@ -192,6 +192,7 @@
  ],
  "ai": true,
  "order": 4,
- "hidden": false,
- "visibleAt": ""
+ "hidden": true,
+ "visibleAt": "",
+ "feedbackUrl": ""
 }

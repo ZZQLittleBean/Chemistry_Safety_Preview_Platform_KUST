@@ -5,7 +5,7 @@
  "order": 0,
  "hidden": false,
  "visibleAt": "",
- "updateStatus": "done",
+ "updateStatus": "updating",
  "safetyPoster": "assets/safety-inorganic.png",
  "intro": "大一《无机化学实验》课前预习材料",
  "experiments": [
@@ -18,7 +18,8 @@
    "hidden": false,
    "visibleAt": "",
    "cards": 4,
-   "points": 101
+   "points": 101,
+   "feedbackUrl": ""
   },
   {
    "id": "e02",

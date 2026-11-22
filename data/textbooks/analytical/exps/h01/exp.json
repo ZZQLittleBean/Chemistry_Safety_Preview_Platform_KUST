@@ -4,7 +4,7 @@
  "name": "水的总硬度测定",
  "order": 1,
  "full": "实验四十五 水的总硬度的测定",
- "hidden": false,
+ "hidden": true,
  "visibleAt": "",
  "ai": true,
  "qa": [
@@ -241,5 +241,6 @@
    "count": 5,
    "ai": true
   }
- ]
+ ],
+ "feedbackUrl": ""
 }

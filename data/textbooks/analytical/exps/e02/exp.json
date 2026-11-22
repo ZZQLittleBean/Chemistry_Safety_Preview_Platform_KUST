@@ -204,6 +204,7 @@
  ],
  "ai": true,
  "order": 2,
- "hidden": false,
- "visibleAt": ""
+ "hidden": true,
+ "visibleAt": "",
+ "feedbackUrl": ""
 }

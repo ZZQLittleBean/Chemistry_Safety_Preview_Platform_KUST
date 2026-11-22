@@ -15,10 +15,11 @@
    "name": "水的总硬度测定",
    "full": "实验四十五 水的总硬度的测定",
    "order": 1,
-   "hidden": false,
+   "hidden": true,
    "visibleAt": "",
    "cards": 4,
-   "points": 26
+   "points": 26,
+   "feedbackUrl": ""
   },
   {
    "id": "e02",
@@ -26,10 +27,11 @@
    "name": "NaOH 溶液的配制与标定",
    "full": "NaOH 溶液的配制与标定",
    "order": 2,
-   "hidden": false,
+   "hidden": true,
    "visibleAt": "",
    "cards": 4,
-   "points": 21
+   "points": 21,
+   "feedbackUrl": ""
   },
   {
    "id": "e03",
@@ -37,10 +39,11 @@
    "name": "EDTA 溶液的标定",
    "full": "EDTA 溶液的标定",
    "order": 3,
-   "hidden": false,
+   "hidden": true,
    "visibleAt": "",
    "cards": 4,
-   "points": 21
+   "points": 21,
+   "feedbackUrl": ""
   },
   {
    "id": "e04",
@@ -48,10 +51,83 @@
    "name": "醋酸含量的测定",
    "full": "醋酸含量的测定",
    "order": 4,
+   "hidden": true,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 20,
+   "feedbackUrl": ""
+  },
+  {
+   "id": "e05",
+   "name": "分析基础练习",
+   "full": "分析基础练习",
+   "no": 5,
+   "order": 0,
    "hidden": false,
    "visibleAt": "",
    "cards": 4,
-   "points": 20
+   "points": 25,
+   "feedbackUrl": ""
+  },
+  {
+   "id": "e06",
+   "name": "EDTA配标+水的硬度",
+   "full": "EDTA溶液配制与标定+水的硬度",
+   "no": 6,
+   "order": 0,
+   "hidden": false,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 24,
+   "feedbackUrl": ""
+  },
+  {
+   "id": "e07",
+   "name": "NaOH标配与醋酸测定",
+   "full": "NaOH标准溶液配制与标定及醋酸含量的测定",
+   "no": 7,
+   "order": 0,
+   "hidden": false,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 46,
+   "feedbackUrl": ""
+  },
+  {
+   "id": "e08",
+   "no": 8,
+   "name": "过氧化氢含量的测定",
+   "full": "实验四十九 过氧化氢含量的测定",
+   "order": 6,
+   "hidden": false,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 23,
+   "feedbackUrl": ""
+  },
+  {
+   "id": "e09",
+   "no": 9,
+   "name": "铝盐中铝含量的测定",
+   "full": "实验四十七 铝盐中铝含量的测定",
+   "order": 7,
+   "hidden": false,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 28,
+   "feedbackUrl": ""
+  },
+  {
+   "id": "e10",
+   "no": 10,
+   "name": "高锰酸钾标准溶液的配制与标定",
+   "full": "实验四十八 高锰酸钾标准溶液的配制与标定",
+   "order": 5,
+   "hidden": false,
+   "visibleAt": "",
+   "cards": 4,
+   "points": 27,
+   "feedbackUrl": ""
   }
  ],
  "coverW": 296,
